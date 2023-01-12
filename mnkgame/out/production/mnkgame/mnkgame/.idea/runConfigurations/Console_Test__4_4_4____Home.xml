@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Console Test (4,4,4) - Home" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="mnkgame.MNKPlayerTester" />
+    <module name="mnkgame" />
+    <option name="PROGRAM_PARAMETERS" value="4 4 4 mnkgame.ATTPlayerDEFFNFC mnkgame.CompetitivePlayer -r 25" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

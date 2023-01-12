@@ -1,0 +1,369 @@
+    private int evaluateThreat(MNKCell c, ArrayList<MNKCell> visited, boolean hor, boolean vert, boolean diag){
+        int i=c.i;
+        int j=c.j;
+        int count=1;  //numero di celle "consecutive"
+
+        int k=1;
+
+
+        boolean jump=false;     //mi tiene traccia di un salto di una cella vuota
+        boolean flag=true;      //in caso ci fosse già stato un salto, se si trova un'altra cella libera si ferma il while
+
+        //start e arrive partono entrambe dalla stessa cella c
+        MNKCell start=c;
+        MNKCell arrive=c;
+
+        /*
+        Da qui in poi i controlli dipendono dai booleani. Si parte dal controllo dietro e poi si va a quello in avanti.
+        (struttura simile a isWinningCell in MNKBoard).
+         */
+        if (hor){
+
+            //backward
+            while (flag && j-k>=0 && k< B.K && B.B[i][j-k]!=opponent) {
+                if(B.B[i][j-k]==MNKCellState.FREE) {
+                    if (!jump) {
+                        if (j-k-1 >=0 && B.B[i][j-k-1]==c.state){
+                            jump=true;
+                        }
+                        else flag=false;
+                    } else {
+                        flag=false;
+                    }
+                }
+                else{
+                    start = new MNKCell(i, j - k, c.state);
+                    count++;
+                    visited.add(start);
+
+                    if (j-k-1 >=0 && B.B[i][j-k-1]!=c.state){
+                        if (count == B.K-2 && isHorOpen(start,arrive)==2 && !jump) {
+
+                            if (j-k-2 >=0 && B.B[i][j-k-2]==c.state) {
+                                visited.add(new MNKCell(i, j - k - 2, c.state));
+                                // In questa situazione: - X X - X si considera una sola minaccia,
+                                // la più pericolosa, ovvero k-2 open, quindi segno che la ultima X come
+                                //segnata, altrimenti considererebbe due vuolte la minaccia
+                            }
+
+
+                            return 100;          //k-2 open
+                        }
+                    }
+
+                }
+                k++;
+            }
+
+
+            //forward
+            flag=true;
+            k=1;
+            while (flag && j+k <  B.N && k < B.K && B.B[i][j+k]!=opponent){
+                if(B.B[i][j+k]==MNKCellState.FREE) {
+                    if (!jump) {
+                        if (j+k+1 <B.N && B.B[i][j+k+1]==c.state){
+                            jump=true;
+                        }
+                        else flag=false;
+                    } else {
+                        flag=false;
+                    }
+                }
+                else {
+                    arrive = new MNKCell(i, j + k, c.state);
+                    count++;
+                    visited.add(arrive);
+
+                    if (j + k + 1 < B.N && B.B[i][j + k + 1] != c.state){
+                        if (count == B.K - 2 && isHorOpen(start, arrive) == 2 && !jump) {
+                            if (j +k + 2 < B.N && B.B[i][j + k + 2] == c.state) {
+                                visited.add(new MNKCell(i, j + k+ 2, c.state));
+                            }
+                            return 100;          //k-2 open
+                        }
+                    }
+
+
+                }
+                k++;
+            }
+
+            //controllo di che tipo di minaccia si tratta
+            if (count==B.K-1){
+                if (isHorOpen(start,arrive)==2){
+                    if (!jump)  return 250;        //k-1 open
+                    else return 80;                   //k-1 allineati con estremi liberi ma con un salto
+                }
+                else if (isHorOpen(start,arrive)==1) {
+                    if (!jump) return 80;          //k-1 allineati con un estremo libero
+                    else return 80;                 //k-1 allineati con un estremo livero ma con un salto
+                }
+                else {
+                    if (jump) return 80;            //k-1 allineati con estremi non liberi ma con un salto
+                }
+            }
+            else if (count == B.K-2){
+                if (isHorOpen(start,arrive)==2){
+                    if (!jump) return 100;          //k-2 open
+                }
+            }
+            //System.out.println("Il count orizzontale è a "+count+" quindi sum è: " +sum);
+        }
+
+        else if (vert){
+
+            //backward
+            while ((((flag && i-k >=0) && k< B.K) && B.B[i-k][j]!=opponent)) {
+                if(B.B[i-k][j]==MNKCellState.FREE) {
+                    if (!jump) {
+                        if (i-k-1 >=0 && B.B[i-k-1][j]==c.state){
+                            jump=true;
+                        }
+                        else flag=false;
+                    } else {
+                        flag=false;
+                    }
+                }
+                else{
+                    start = new MNKCell(i-k,j, c.state);
+                    count++;
+                    visited.add(start);
+                    if (i-k-1 >= 0 && B.B[i-k-1][j]!=c.state) {
+                        if (count == B.K - 2 && isVerOpen(start, arrive) == 2 && !jump) {
+
+                            if (i - k - 2 >= 0 && B.B[i - k - 2][j] == c.state) {
+                                visited.add(new MNKCell(i - k - 2, j, c.state));
+                            }
+
+
+                            return 100;          //k-2 open
+                        }
+                    }
+                }
+                k++;
+            }
+
+            //forward
+            flag=true;
+            k=1;
+            while ((((flag && i+k < B.M) && k< B.K) && B.B[i+k][j]!=opponent)){
+                if(B.B[i+k][j]==MNKCellState.FREE) {
+                    if (!jump) {
+                        if (i+k+1 < B.M && B.B[i+k+1][j]==c.state){
+                            jump=true;
+                        }
+                        else flag=false;
+                    } else {
+                        flag=false;
+                    }
+                }
+                else{
+                    arrive = new MNKCell(i+k, j, c.state);
+                    count++;
+                    visited.add(arrive);
+                    if (i+k +1 < B.M && B.B[i+k+1][j]!=c.state){
+                        if (count == B.K-2 && isVerOpen(start,arrive)==2 && !jump) {
+
+                            if (i+k +2 < B.M && B.B[i+k+2][j]==c.state){
+                                visited.add(new MNKCell(i + k + 2, j, c.state));
+                            }
+
+                            return 100;          //k-2 open
+                        }
+                    }
+                }
+                k++;
+            }
+
+            if (count==B.K-1){
+                if (isVerOpen(start,arrive)==2){
+                    if (!jump)  return 250;        //k-1 open
+                    else return 80;                   //k-1 allineati con estremi liberi ma con un salto
+                }
+                else if (isVerOpen(start,arrive)==1) {
+                    if (!jump) return 80;          //k-1 allineati con un estremo libero
+                    else return 80;                 //k-1 allineati con un estremo livero ma con un salto
+                }
+                else {
+                    if (jump) return 80;            //k-1 allineati con estremi non liberi ma con un salto
+                }
+            }
+            else if (count == B.K-2){
+                if (isVerOpen(start,arrive)==2){
+                    if (!jump) return 100;          //k-2 open
+                }
+            }
+            //System.out.println("Il count verticale è a "+count+" quindi sum è: " +sum);
+        }
+
+        else if (diag){
+
+            //backward
+            while (flag && i-k>=0 && j-k>=0 && k<B.K && B.B[i-k][j-k]!=opponent) {
+                if (B.B[i - k][j - k] == MNKCellState.FREE) {
+                    if (!jump) {
+                        if (i - k - 1 >= 0 && j - k - 1 >= 0 && B.B[i - k - 1][j - k - 1] == c.state) {
+                            jump = true;
+                        } else flag = false;
+                    } else {
+                        flag = false;
+                    }
+                } else {
+                    start = new MNKCell(i-k, j-k, c.state);
+                    count++;
+                    visited.add(start);
+                    if (i-k-1>=0 && j-k-1>=0 && B.B[i-k-1][j-k-1]!=c.state){
+                        if (count == B.K-2 && isDiagOpen(start,arrive)==2 && !jump) {
+
+                            if (i-k-2>=0 && j-k-2>=0 && B.B[i-k-2][j-k-2]!=c.state){
+                                visited.add(new MNKCell(i-k-2,j-k-2,c.state));
+                            }
+                            return 100;          //k-2 open
+                        }
+                    }
+                }
+                k++;
+            }
+
+            //forward
+            flag=true;
+            k=1;
+            while (flag && i+k < B.M && j+k < B.N &&B.B[i+k][j+k]!=opponent){
+                if(B.B[i+k][j+k]==MNKCellState.FREE) {
+                    if (!jump) {
+                        if (i+k+1 < B.M && j+k+1 < B.N && B.B[i+k+1][j+k+1] == c.state){
+                            jump=true;
+                        }
+                        else flag=false;
+                    } else {
+                        flag=false;
+                    }
+                }
+                else{
+                    arrive = new MNKCell(i+k, j+k, c.state);
+                    count++;
+                    visited.add(arrive);
+                    if (i+k+1 < B.M && j+k+1 < B.N && B.B[i+k+1][j+k+1]!=c.state){
+                        if (count == B.K-2 && isDiagOpen(start,arrive)==2 && !jump) {
+
+                            if (i+k+2 < B.M && j+k+2 < B.N && B.B[i+k+2][j+k+2]==c.state){
+                                visited.add(new MNKCell(i+k+2,j+k+2,c.state));
+                            }
+
+
+                            return 100;          //k-2 open
+                        }
+                    }
+                }
+                k++;
+            }
+            if (count==B.K-1){
+                if (isDiagOpen(start,arrive)==2){
+                    if (!jump)  return 250;        //k-1 open
+                    else return 80;                   //k-1 allineati con estremi liberi ma con un salto
+                }
+                else if (isDiagOpen(start,arrive)==1) {
+                    if (!jump) return 80;          //k-1 allineati con un estremo libero
+                    else return 80;                 //k-1 allineati con un estremo livero ma con un salto
+                }
+                else {
+                    if (jump) return 80;            //k-1 allineati con estremi non liberi ma con un salto
+                }
+            }
+            else if (count == B.K-2){
+                if (isDiagOpen(start,arrive)==2){
+                    if (!jump) return 100;          //k-2 open
+                }
+            }
+            //System.out.println("Il count diagonale è a "+count+" quindi sum è: " +sum);
+        }
+        else {
+            //ANTIDIAG
+            //backward
+            while (flag && i-k >= 0 && j+k < B.N  && B.B[i-k][j+k]!=opponent) {
+                if(B.B[i-k][j+k]==MNKCellState.FREE) {
+                    if (!jump) {
+                        if (i-k-1 >=0 && j+k+1 < B.N && B.B[i-k-1][j+k+1] == c.state){
+                            jump=true;
+                        }
+                        else flag=false;
+                    } else {
+                        flag=false;
+                    }
+                }
+                else{
+                    start = new MNKCell(i-k, j+k, c.state);
+                    count++;
+                    visited.add(start);
+
+                    if (i-k-1 >= 0 && j+k+1 < B.N && B.B[i-k-1][j+k+1]!=c.state){
+                        if (count == B.K-2 && isAntiDiagOpen(start,arrive)==2 && !jump) {
+
+                            if (i-k-2 >= 0 && j+k+2 < B.N && B.B[i-k-2][j+k+2]==c.state){
+                                visited.add(new MNKCell(i-k-2,j+k+2,c.state));
+                            }
+
+
+                            return 100;          //k-2 open
+                        }
+                    }
+                }
+                k++;
+            }
+
+            flag=true;
+            //forward
+            k=1;
+            while (flag && i+k <B.M && j-k >= 0 && B.B[i+k][j-k]!=opponent){
+                if(B.B[i+k][j-k]==MNKCellState.FREE) {
+                    if (!jump) {
+                        if (i+k+1 < B.M && j-k-1>=0 && B.B[i+k+1][j-k-1] == c.state){
+                            jump=true;
+                        }
+                        else flag=false;
+                    } else {
+                        flag=false;
+                    }
+                }
+                else{
+                    arrive = new MNKCell(i+k, j-k, c.state);
+                    count++;
+                    visited.add(arrive);
+
+                    if (i+k+1 <B.M && j-k-1 >= 0 && B.B[i+k+1][j-k-1]!=c.state){
+                        if (count == B.K-2 && isAntiDiagOpen(start,arrive)==2 && !jump) {
+                            if (i+k+2 <B.M && j-k-2 >= 0 && B.B[i+k+2][j-k-2]==c.state){
+                                visited.add(new MNKCell(i+k+2,j-k-2,c.state));
+                            }
+                            return 100;          //k-2 open
+                        }
+                    }
+
+                }
+                k++;
+            }
+
+            if (count==B.K-1){
+                if (isAntiDiagOpen(start,arrive)==2){
+                    if (!jump)  return 250;        //k-1 open
+                    else return 80;                   //k-1 allineati con estremi liberi ma con un salto
+                }
+                else if (isAntiDiagOpen(start,arrive)==1) {
+                    if (!jump) return 80;          //k-1 allineati con un estremo libero
+                    else return 80;                 //k-1 allineati con un estremo livero ma con un salto
+                }
+                else {
+                    if (jump) return 80;            //k-1 allineati con estremi non liberi ma con un salto
+                }
+            }
+            else if (count == B.K-2){
+                if (isAntiDiagOpen(start,arrive)==2){
+                    if (!jump) return 100;          //k-2 open
+                }
+            }
+            //System.out.println("Il count antidiagonale è a "+count+" quindi sum è: " +sum);
+        }
+        return 0;
+    }
+    

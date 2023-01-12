@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="11-15" type="Multirun" separateTabs="true" reuseTabsWithFailures="false" startOneByOne="true" markFailedProcess="false" hideSuccessProcess="false" delayTime="0.0">
+    <runConfiguration name="Console Test (6,6,5) - Away" type="Application" />
+    <runConfiguration name="Console Test (6,6,6) - Away" type="Application" />
+    <runConfiguration name="Console Test (7,4,4) - Home" type="Application" />
+    <runConfiguration name="Console Test (7,4,4) - Away" type="Application" />
+    <runConfiguration name="Console Test (7,5,4) - Home" type="Application" />
+    <runConfiguration name="Console Test (7,5,4) - Away" type="Application" />
+    <runConfiguration name="Console Test (7,6,4) - Home" type="Application" />
+    <runConfiguration name="Console Test (7,6,4) - Away" type="Application" />
+    <runConfiguration name="Console Test (6,6,5) - Home" type="Application" />
+    <runConfiguration name="Console Test (6,6,6) - Home" type="Application" />
+    <method v="2" />
+  </configuration>
+</component>
