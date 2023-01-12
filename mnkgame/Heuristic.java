@@ -13,237 +13,90 @@ public class Heuristic {
     private boolean currentPlayerCell;
 
     public Heuristic(){
+        //utilizzo un hashset per tenere traccia delle celle già utilizzate per i controlli rispettivamente orizzontali, verticali, diagonali e antidiagonali
         hor = new HashSet<>();
         ver = new HashSet<>();
         diag = new HashSet<>();
         antidiag = new HashSet<>();
     }
+
     private int check(MNKCell cell, MNKBoard B){
 
         MNKCellState opponentstate= cell.state == MNKCellState.P1 ?MNKCellState.P2: MNKCellState.P1;
         int i=cell.i;
         int j=cell.j;
-        int sum=0;
-        int totalcell=1;
-        int totalmycell=1;
-        int aligned=1;
-        boolean canbealigned=true;
-        //per impilare e vincere il massimo che può mancare è un blocco, quindi nel caso
+        int sum=0;      //totale valutazione
+        int totalcell=1;        //celle vuote e di cell.state  
 
         // Horizontal check
         int k=1;
         while(j-k >= 0 && k<B.K && B.B[i][j-k] != opponentstate){     // backward check
-            if(B.B[i][j-k]==cell.state) {
-                if (canbealigned) aligned++;
-                else totalmycell++;
-            }
-            else if (B.B[i][j-k]==MNKCellState.FREE) canbealigned=false;
             totalcell++;k++;
         }
 
-        canbealigned=true;
         k=1;
         while(j+k <  B.N && k<B.K &&B.B[i][j+k] != opponentstate){   // forward check
-            if(B.B[i][j+k]==cell.state) {
-                if (canbealigned) aligned++;
-                else totalmycell++;
-            }
-            else if (B.B[i][j+k]==MNKCellState.FREE) canbealigned=false;
             totalcell++;k++;
         }
 
-        /*
-        sum += totalcell;
-        sum += totalmycell*3;
-        if(totalcell >= B.K) {
-            sum += (aligned*7);
-            sum+=20;
-        }
-         */
-        /*
-        sum += totalmycell;
-        if(totalcell == B.K) {
-            sum += (aligned*4);
-            sum+=(totalcell+4);
-        }
-        if (totalcell>B.K){
-            sum+=aligned*8;
-            sum+=(totalcell+10);
-        }
-
-        if (totalcell<B.K) sum+= totalcell;
-
-         */
-
-        sum+= valuecheck(totalcell,aligned,totalmycell,B.K);
-
-        //else if (totalcell>B.K) sum+=9;
+        sum += valuecheck(totalcell,B.K);
 
         // Vertical check;
-        canbealigned=true;
-        aligned=1;
         totalcell=1;
-        totalmycell=1;
         k=1;
         while(i-k >= 0 && k<B.K&&B.B[i-k][j] != opponentstate){     // backward check
-            if(B.B[i-k][j]==cell.state) {
-                if (canbealigned) aligned++;
-                else totalmycell++;
-            }
-            else if (B.B[i-k][j]==MNKCellState.FREE) canbealigned=false;
             totalcell++;k++;
         }
 
         canbealigned=true;
         k=1;
         while(i+k <  B.M && k<B.K && B.B[i+k][j] != opponentstate){     // forward check
-            if(B.B[i+k][j]==cell.state) {
-                if (canbealigned) aligned++;
-                else totalmycell++;
-            }
-            else if (B.B[i+k][j]==MNKCellState.FREE) canbealigned=false;
             totalcell++;k++;
         }
 
-        sum+= valuecheck(totalcell,aligned,totalmycell,B.K);
-        //else if (totalcell>B.K) sum+=9;
+        sum+= valuecheck(totalcell,B.K);
 
         // Diagonal check
-        canbealigned=true;
-        aligned=1;
         totalcell=1;
-        totalmycell=1;
         k=1;
         while(i-k >= 0 && j-k >= 0 && k<B.K && B.B[i-k][j-k]  != opponentstate){     // backward check
-            if(B.B[i-k][j-k]==cell.state){
-                if (canbealigned) aligned++;
-                else totalmycell++;
-            }
-            else if (B.B[i-k][j-k]==MNKCellState.FREE) canbealigned=false;
             totalcell++;k++;
         }
 
         canbealigned=true;
         k=1;
         while(i+k <  B.M && k<B.K && j+k <  B.N && B.B[i+k][j+k] != opponentstate){   // forward check
-            if(B.B[i+k][j+k]==cell.state) {
-                if (canbealigned) aligned++;
-                else totalmycell++;
-            }
-            else if (B.B[i+k][j+k]==MNKCellState.FREE) canbealigned=false;
             totalcell++;k++;
         }
 
-        sum+= valuecheck(totalcell,aligned,totalmycell,B.K);
+        sum+= valuecheck(totalcell,B.K);
 
         // Anti-diagonal check
-        canbealigned=true;
-        aligned=1;
         totalcell=1;
-        totalmycell=1;
         k=1;
         while(i-k >= 0 && j+k < B.N && k<B.K && B.B[i-k][j+k] != opponentstate){     // backward check
-            if(B.B[i-k][j+k]==cell.state) {
-                if (canbealigned) aligned++;
-                else totalmycell++;
-            }
-            else if (B.B[i-k][j+k]==MNKCellState.FREE) canbealigned=false;
             totalcell++;k++;
         }
 
         canbealigned=true;
         k=1;
         while(i+k <  B.M && j-k >= 0 && k<B.K && B.B[i+k][j-k] != opponentstate){   // forward check
-            if(B.B[i+k][j-k]==cell.state) {
-                if (canbealigned) aligned++;
-                else totalmycell++;
-            }
-            else if (B.B[i+k][j-k]==MNKCellState.FREE) canbealigned=false;
             totalcell++;k++;
         }
-        /*
-        if(totalcell == B.K) {
-            if (currentPlayerCell) {
-                sum += (aligned * 1.5);
-                sum+=totalmycell*2;
-            } else{
-                sum += (aligned * 6);
-                sum += totalmycell*5;
-            }
-        }
-        if (totalcell>B.K){
-            if (currentPlayerCell) {
-                sum += aligned * 4;
-                sum+=totalmycell*4;
-            }
-            else {
-                sum+=aligned*13;
-                sum+=totalmycell*8;
-            }
-        }
-        sum+=totalcell/6;
 
+        sum += valuecheck(totalcell,B.K);
 
-         */
-
-        sum+= valuecheck(totalcell,aligned,totalmycell,B.K);
         return sum;
     }
 
-    private int valuecheck(int totalcell, int aligned, int totalmycell, int K){
+    private int valuecheck(int totalcell, int K){
         int sum=0;
-        //1.
-        /*
-
-        if (totalcell > K){
-            if (currentPlayerCell){
-                sum+=totalmycell/2;
-                sum+=totalcell;
-            }
-            else {
-                sum+=totalmycell;
-                sum+=totalcell*3;
-            }
-        }
-        else if (totalcell == K) {
-            if (currentPlayerCell) {
-                sum += totalmycell / 50;
-                sum += totalcell / 25;
-            } else {
-                sum += totalmycell / 25;
-                sum += totalcell / 10;
-            }
-        }
-        else {
-            sum+=totalcell/100;
-        }
-         */
-
-        //2.            MIGLIORE
-
-        if (totalcell > K){
-
+        if (totalcell > K){     // se è maggiore di k vuol dire che lì si può creare una minaccia, dunque aumento il valore della value
             sum+=totalcell*2;
         }
-        else if (totalcell==K) sum+=totalcell;
+        else if (totalcell==K) sum+=totalcell;      // se è uguale a K vuol dire che si può creare una minaccia ma facilmente bloccabile, dunque lo lascio così
 
-
-
-
-
-        //3.
-        /*
-        if (totalcell > K){
-            sum+=totalmycell;
-            sum+=totalcell*2;
-        }
-        else if (totalcell==K) {
-            sum += totalmycell/2;
-            sum += totalcell;
-        }
-
-
-         */
+        //in caso le celle siano minori di k vuol dire che sicuramente non ci potrà essere una minaccia
         return sum;
     }
 
@@ -278,6 +131,7 @@ public class Heuristic {
         return hole ;
     }
     private  int isHorOpen(MNKCell start, MNKCell arrive, MNKBoard B) {
+        
         int hole = 0;
         if (start.j - 1 >= 0 && B.B[start.i][start.j-1] == MNKCellState.FREE) {
             hole++;

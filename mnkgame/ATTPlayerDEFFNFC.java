@@ -1,7 +1,4 @@
 package mnkgame;
-
-
-
 import java.util.*;
 
 public class ATTPlayerDEFFNFC implements MNKPlayer{
