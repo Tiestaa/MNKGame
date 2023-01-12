@@ -30,7 +30,6 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
 
     public void initPlayer(int M, int N, int K, boolean first, int timeout_in_secs) {
         visitedNode=0;
-        System.out.println("TERZA PROVA");
         B = new MNKBoard(M, N, K);
         myWin = first ? MNKGameState.WINP1 : MNKGameState.WINP2;
         yourWin = first ? MNKGameState.WINP2 : MNKGameState.WINP1;
@@ -108,7 +107,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
         int value = 0;
         boolean Final = false;
         int AlphaOrig = alpha;
-
+        
         TT.getMainKey(B);
         DataHash TTData = TT.containsData(TT.getZobby(), TT.getBot_Zobby(), TT.getBot_Spec_Zobby(), TT.getSpec_Zobby());
         if (TTData == null && B.M == B.N) {
@@ -133,6 +132,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
                 }
             }
         }
+        
 
 
 
@@ -207,7 +207,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
     }
     public MNKCell selectCell(MNKCell[] FC, MNKCell[] MC){
         TimeStart =System.currentTimeMillis();
-        TimeLimit = BigSize ? 100. - (0.25+((MC.length)*0.02)) : TimeLimit;
+        TimeLimit = BigSize ? 100. - (0.25+((MC.length)*0.025)) : TimeLimit;
         TimeInFill=0;
 
         if(MC.length > 0) {
@@ -259,9 +259,6 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
         }
 
         //CONTROLLARE COSA SUCCEDE SE SI METTE NON IN ANGOLO
-
-
-
         if(FC.length == 1) {
             return FC[0];  // only one move left
         }
