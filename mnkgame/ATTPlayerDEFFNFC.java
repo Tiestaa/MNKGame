@@ -44,6 +44,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
         NFC = new ArrayNFC(M,N);
         cacheHit++;
     }
+
     private void IterativeDeepening(boolean MaxplayerA, int maxdepth) {
         visitedNode = 0;
         TimeFinish = false;       //vede quando un for è finito e dunque può cambiare la bestcell
@@ -81,7 +82,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
                             bestvalue = bestMove(bestvalue, value, false, d);
                         }
                     }
-                    //System.out.println("Value della cella: "+ d.i+"-"+d.j+" = "+ value+".\t\tQuindi bestvalue= "+ bestvalue);
+
                     B.unmarkCell();
                     NFC.deleteNFCplus(d, B);
 
@@ -96,7 +97,6 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
             if (NoUpdate && DepthCount==1) return;
             if ((!TimeFinish || DepthCount == 1) && !NoUpdate) {
                 NewBestValue = bestvalue;
-                //System.out.println("FINITA ALTEZZA " + DepthCount + ", quindi cambio la cella: " + NewBestCell.i + "-" + NewBestCell.j + " con la cella: " + BestIterativeCell.i + "-" + BestIterativeCell.j);
                 NewBestCell = BestIterativeCell;   //se non finisce di ispezionare tutta l'altezza riporta la bestcell trovata prima
             }
         }
@@ -132,9 +132,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
                 }
             }
         }
-        
-
-
+    
 
         if (B.gameState() != MNKGameState.OPEN || depth == 0 || (System.currentTimeMillis() - TimeStart) / 1000.0 > TIMEOUT * (TimeLimit / 100.0)){
             value = Euristica.evaluate(B);

@@ -13,7 +13,6 @@ public class Heuristic {
     private boolean currentPlayerCell;
 
     public Heuristic(){
-        //utilizzo un hashset per tenere traccia delle celle già utilizzate per i controlli rispettivamente orizzontali, verticali, diagonali e antidiagonali
         hor = new HashSet<>();
         ver = new HashSet<>();
         diag = new HashSet<>();
@@ -21,65 +20,67 @@ public class Heuristic {
     }
 
     private int checkBis(MNKCell cell, MNKBoard B){
+
         //NON FUNZIONA
+
         MNKCellState opponentstate = (cell.state == MNKCellState.P1) ? MNKCellState.P2 : MNKCellState.P1;       //funziona
         int i=cell.i;
         int j=cell.j;
-        int lineCount=1;
+        int cellCount=1;
         int totalValuation=0;
 
         //Horizontal check
         int k=1;
-        while(j-k >= 0 && k<B.K+1 && B.B[i][j-k] != opponentstate){     // backward check
-            lineCount++;k++;
+        while(j-k >= 0 && k<B.K && B.B[i][j-k] != opponentstate){     // backward check
+            cellCount++;k++;
         }
         k=1;
         while(j+k <  B.N && k<B.K+1 &&B.B[i][j+k] != opponentstate){        // forward check
-            lineCount++;k++;
+            cellCount++;k++;
         }
 
-        if (lineCount >= B.K) totalValuation += 1;
+        if (cellCount >= B.K) totalValuation += 1;
 
         // Vertical check
         k=1;
-        lineCount=1;
+        cellCount=1;
         while(i-k >= 0 && k<B.K+1 && B.B[i-k][j] != opponentstate){     // backward check
-            lineCount++;k++;
+            cellCount++;k++;
         }
 
         k=1;
         while(i+k <  B.M && k<B.K+1 && B.B[i+k][j] != opponentstate){     // forward check
-            lineCount++;k++;
+            cellCount++;k++;
         }
 
-        if (lineCount >= B.K) totalValuation += 1;
+        if (cellCount >= B.K) totalValuation += 1;
 
         //diagonal check
         k=1;
-        lineCount=1;
+        cellCount=1;
         while(i-k >= 0 && j-k >= 0 && k<B.K+1 && B.B[i-k][j-k]  != opponentstate){     // backward check
-            lineCount++;k++;
+            cellCount++;k++;
         }
 
         k=1;
         while(i+k <  B.M && k<B.K+1 && j+k <  B.N && B.B[i+k][j+k] != opponentstate){   // forward check
-            lineCount++;k++;
+            cellCount++;k++;
         }
 
-        if (lineCount >= B.K) totalValuation += 1;
+        if (cellCount >= B.K) totalValuation += 1;
 
         //antidiagonale check
         k=1;
-        lineCount=1;
+        cellCount=1;
         while(i-k >= 0 && j+k < B.N && k<B.K+1 && B.B[i-k][j+k] != opponentstate){     // backward check
-            lineCount++;k++;
+            cellCount++;k++;
         }
         k=1;
         while(i+k <  B.M && j-k >= 0 && k<B.K+1 && B.B[i+k][j-k] != opponentstate){   // forward check
-            lineCount++;k++;
+            cellCount++;k++;
         }
 
-        if (lineCount >= B.K) totalValuation += 1;
+        if (cellCount >= B.K) totalValuation += 1;
 
         return totalValuation;
     }
@@ -238,8 +239,6 @@ public class Heuristic {
         return hole;
     }
 
-
-    //PRIMA PROVA
     private int evaluateHorThreat(MNKCell c, MNKBoard B) {
         int i = c.i;
         int j = c.j;
@@ -334,7 +333,6 @@ public class Heuristic {
         }
         return 0;
     }
-
     private int evaluateVerThreat(MNKCell c, MNKBoard B){
         int i=c.i;
         int j=c.j;
