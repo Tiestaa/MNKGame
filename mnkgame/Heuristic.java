@@ -35,7 +35,7 @@ public class Heuristic {
             cellCount++;k++;
         }
         k=1;
-        while(j+k <  B.N && k<B.K+1 &&B.B[i][j+k] != opponentstate){        // forward check
+        while(j+k <  B.N && k<B.K+1 && B.B[i][j+k] != opponentstate){        // forward check
             cellCount++;k++;
         }
 

@@ -45,6 +45,34 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
         cacheHit++;
     }
 
+   public void StampGame(MNKCell[] MC, MNKBoard B) {
+        MNKCell c1, c2;
+        boolean found = false;
+        for (int i = 0; i < B.M; i++) {
+            for (int j = 0; j < B.N; j++) {
+                c1 = new MNKCell(i, j, MNKCellState.P1);
+                c2 = new MNKCell(i, j, MNKCellState.P2);
+                for (MNKCell M : MC) {
+                    if (M.i == c1.i && M.j == c1.j && M.state == c1.state) {
+                        System.out.print("X ");
+                        found = true;
+                        break;
+                    } else if (M.i == c1.i && M.j == c1.j && M.state == c2.state) {
+                        System.out.print("O ");
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    System.out.print("_ ");
+                }
+                found = false;
+            }
+            System.out.print("\n");
+        }
+        System.out.println("------");
+    }
+
     private void IterativeDeepening(boolean MaxplayerA, int maxdepth) {
         visitedNode = 0;
         TimeFinish = false;       //vede quando un for è finito e dunque può cambiare la bestcell
@@ -76,6 +104,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
                     if (!TimeFinish) {
                         if (MaxplayerA) {
                             value = Math.max(Integer.MIN_VALUE, AlphaBeta(DepthCount, alpha, beta, false));
+                        
                             bestvalue = bestMove(bestvalue, value, true, d);
                         } else {
                             value = Math.min(Integer.MAX_VALUE, AlphaBeta(DepthCount, alpha, beta, true));
@@ -136,6 +165,8 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
 
         if (B.gameState() != MNKGameState.OPEN || depth == 0 || (System.currentTimeMillis() - TimeStart) / 1000.0 > TIMEOUT * (TimeLimit / 100.0)){
             value = Euristica.evaluate(B);
+            StampGame(B.getMarkedCells(), B);
+            System.out.println(value + '\n');
             Final = true;
         }
 
