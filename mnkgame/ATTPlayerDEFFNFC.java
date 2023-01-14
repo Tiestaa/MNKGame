@@ -233,8 +233,8 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
     public MNKCell selectCell(MNKCell[] FC, MNKCell[] MC){
         TimeStart =System.currentTimeMillis();
         if (BigSize){
-            if (MC.length <= B.M*B.N) TimeLimit = TimeLimit - 0.025;
-            else TimeLimit = TimeLimit +0.025
+            if (MC.length <= B.M*B.N/2) TimeLimit = TimeLimit - 0.025;
+            else TimeLimit = TimeLimit +0.025;
         }
         TimeInFill=0;
 
