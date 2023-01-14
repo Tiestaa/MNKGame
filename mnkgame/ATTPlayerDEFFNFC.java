@@ -85,7 +85,6 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
         for (DepthCount = 1; DepthCount <= maxdepth; DepthCount++) {
             BestIterativeCell = null;
             if ((System.currentTimeMillis() - TimeStart) / 1000.0 > TIMEOUT * (TimeLimit / 100.0)) {
-                //System.out.println("Depth raggiunta: "+ (DepthCount-1));
                 return;
             }
             bestvalue = MaxplayerA ? Integer.MIN_VALUE : Integer.MAX_VALUE;
@@ -116,7 +115,6 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
                     //cutoff manuali
                     if ((First && value == 1000000) || (!First && value == -1000000)) {
                         NewBestCell = BestIterativeCell;
-                        System.out.println("best: " + bestvalue + '\n');
                         return;
                     }
                 }
@@ -128,7 +126,6 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
                 NewBestCell = BestIterativeCell;   //se non finisce di ispezionare tutta l'altezza riporta la bestcell trovata prima
             }
         }
-        System.out.println("best: " + bestvalue + '\n');
     }
 
 
@@ -235,7 +232,10 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
     }
     public MNKCell selectCell(MNKCell[] FC, MNKCell[] MC){
         TimeStart =System.currentTimeMillis();
-        TimeLimit = BigSize ? 100. - (0.25+((MC.length)*0.025)) : TimeLimit;
+        if (BigSize){
+            if (MC.length <= B.M*B.N) TimeLimit = TimeLimit - 0.025;
+            else TimeLimit = TimeLimit +0.025
+        }
         TimeInFill=0;
 
         if(MC.length > 0) {
@@ -285,8 +285,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
             NFC.fillNFCplus(c,B);
             return c;
         }
-
-        //CONTROLLARE COSA SUCCEDE SE SI METTE NON IN ANGOLO
+        
         if(FC.length == 1) {
             return FC[0];  // only one move left
         }

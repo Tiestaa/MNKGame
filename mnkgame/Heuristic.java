@@ -725,23 +725,14 @@ public class Heuristic {
         if (CurrPlayer==0 && OppPlayer==0){
             for (MNKCell c : MARKED){
                 valuation=checkBis(c,B);
-               // System.out.println(valuation);
                 if (c.state == MNKCellState.P1) MaxPlayerValue = MaxPlayerValue +  valuation;
                 else MinPlayerValue = MinPlayerValue - valuation;
             }
-        
-            //System.out.println("max: "+ MaxPlayerValue);
-            //System.out.println("min: "+ MinPlayerValue+ '\n');
         }
 
         int toReturn = 0;
         if (CurrPlayer!=0 && OppPlayer!=0) toReturn = (CurrPlayer-OppPlayer);
-        else {
-            //System.out.println("entro nell'else");
-            toReturn = (MaxPlayerValue+MinPlayerValue);
-        }
-        //System.out.println("Value da Euristica: "+ toReturn);
-
+        else toReturn = (MaxPlayerValue+MinPlayerValue);
         return toReturn;
     
     }
