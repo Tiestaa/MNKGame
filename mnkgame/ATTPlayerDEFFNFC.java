@@ -86,7 +86,6 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
             BestIterativeCell = null;
             if ((System.currentTimeMillis() - TimeStart) / 1000.0 > TIMEOUT * (TimeLimit / 100.0)) {
                 //System.out.println("Depth raggiunta: "+ (DepthCount-1));
-                System.out.println("best: " + bestvalue + '\n');
                 return;
             }
             bestvalue = MaxplayerA ? Integer.MIN_VALUE : Integer.MAX_VALUE;
@@ -94,7 +93,6 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
             for (MNKCell d : NFC.getArray()) {
                 if (NFC.contains(d)) {
                     if ((System.currentTimeMillis() - TimeStart) / 1000.0 > TIMEOUT * (TimeLimit / 100.0)) {
-                        //System.out.println("Depth raggiunta: "+ (DepthCount-1));
                         TimeFinish = true;
                         break;
                     }
@@ -105,9 +103,6 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
                     if (!TimeFinish) {
                         if (MaxplayerA) {
                             value = Math.max(Integer.MIN_VALUE, AlphaBeta(DepthCount, alpha, beta, false));
-                            if(Math.abs(value) != 1000000) System.out.println(value);
-                            /*if(d.i == 13 && d.j == 13)
-                                System.out.println("13 -13 value: " + value + "\t");*/
                             bestvalue = bestMove(bestvalue, value, true, d);
                         } else {
                             value = Math.min(Integer.MAX_VALUE, AlphaBeta(DepthCount, alpha, beta, true));
@@ -138,7 +133,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
 
 
     private int AlphaBeta(int depth,int alpha, int beta,boolean MaxPlayerA) {
-        int value = 0;
+        int value = MaxPlayerA ? Integer.MIN_VALUE : Integer.MAX_VALUE;;
         boolean Final = false;
         int AlphaOrig = alpha;
         
@@ -166,11 +161,11 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
                 }
             }
         }
+        
     
 
         if (B.gameState() != MNKGameState.OPEN || depth == 0 || (System.currentTimeMillis() - TimeStart) / 1000.0 > TIMEOUT * (TimeLimit / 100.0)){
             value = Euristica.evaluate(B);
-            
             Final = true;
         }
 

@@ -734,7 +734,15 @@ public class Heuristic {
             //System.out.println("min: "+ MinPlayerValue+ '\n');
         }
 
-        return (CurrPlayer==0 && OppPlayer==0) ? CurrPlayer-OppPlayer : MaxPlayerValue+MinPlayerValue;
+        int toReturn = 0;
+        if (CurrPlayer!=0 && OppPlayer!=0) toReturn = (CurrPlayer-OppPlayer);
+        else {
+            //System.out.println("entro nell'else");
+            toReturn = (MaxPlayerValue+MinPlayerValue);
+        }
+        //System.out.println("Value da Euristica: "+ toReturn);
+
+        return toReturn;
     
     }
 }
