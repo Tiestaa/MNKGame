@@ -12,7 +12,7 @@ public class ArrayNFC{
         String totalm = Integer.toString(N-1);
         String totalmn = totaln + totalm;
         NFC = new NFCell[Integer.parseInt(totalmn)+1];
-        for (int i = 0; i<(int) Math.ceil(M*N*2.7); i++)
+        for (int i = 0; i < Integer.parseInt(totalmn)+1; i++)
             NFC[i] = null;
     }
 

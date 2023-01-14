@@ -19,6 +19,33 @@ public class Heuristic {
         antidiag = new HashSet<>();
     }
 
+    public void StampGame(MNKCell[] MC, MNKBoard B) {
+        MNKCell c1, c2;
+        boolean found = false;
+        for (int i = 0; i < B.M; i++) {
+            for (int j = 0; j < B.N; j++) {
+                c1 = new MNKCell(i, j, MNKCellState.P1);
+                c2 = new MNKCell(i, j, MNKCellState.P2);
+                for (MNKCell M : MC) {
+                    if (M.i == c1.i && M.j == c1.j && M.state == c1.state) {
+                        System.out.print("X ");
+                        found = true;
+                        break;
+                    } else if (M.i == c1.i && M.j == c1.j && M.state == c2.state) {
+                        System.out.print("O ");
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    System.out.print("_ ");
+                }
+                found = false;
+            }
+            System.out.print("\n");
+        }
+        System.out.println("------");
+    }
     private int checkBis(MNKCell cell, MNKBoard B){
 
         //NON FUNZIONA
@@ -28,61 +55,116 @@ public class Heuristic {
         int j=cell.j;
         int cellCount=1;
         int totalValuation=0;
+        int sum = 0;
 
         //Horizontal check
         int k=1;
         while(j-k >= 0 && k<B.K && B.B[i][j-k] != opponentstate){     // backward check
+            if(B.B[i][j-k] == cell.state){
+                totalValuation ++;
+            }
             cellCount++;k++;
         }
+        if(j-k >= 0 && B.B[i][j-k] == opponentstate)
+            totalValuation --;
+
         k=1;
         while(j+k <  B.N && k<B.K+1 && B.B[i][j+k] != opponentstate){        // forward check
+            if(B.B[i][j+k] == cell.state){
+                totalValuation ++;
+            }
             cellCount++;k++;
         }
+        if(j+k <  B.N && B.B[i][j+k] == opponentstate && cellCount < B.K)
+            totalValuation --;
 
-        if (cellCount >= B.K) totalValuation += 1;
+        if (cellCount >= B.K) totalValuation += 2;
+        else totalValuation = 0;
+        sum = totalValuation + sum;
 
         // Vertical check
         k=1;
         cellCount=1;
         while(i-k >= 0 && k<B.K+1 && B.B[i-k][j] != opponentstate){     // backward check
+            if(B.B[i-k][j] == cell.state){
+                totalValuation ++;
+            }
             cellCount++;k++;
         }
-
+        if(i-k >= 0 && B.B[i-k][j] == opponentstate)
+            totalValuation --;
+        
         k=1;
         while(i+k <  B.M && k<B.K+1 && B.B[i+k][j] != opponentstate){     // forward check
+            if(B.B[i+k][j] == cell.state){
+                totalValuation ++;
+            }
             cellCount++;k++;
         }
+        if(i+k <  B.M && B.B[i+k][j] == opponentstate && cellCount < B.K)
+            totalValuation --;
 
-        if (cellCount >= B.K) totalValuation += 1;
+        if (cellCount >= B.K) totalValuation += 2;
+        else totalValuation = 0;
+        sum = totalValuation + sum;
 
         //diagonal check
         k=1;
         cellCount=1;
         while(i-k >= 0 && j-k >= 0 && k<B.K+1 && B.B[i-k][j-k]  != opponentstate){     // backward check
+            if(B.B[i-k][j-k] == cell.state){
+                totalValuation ++;
+            }
             cellCount++;k++;
         }
+        if(i-k >= 0 && j-k >= 0 && B.B[i-k][j-k] == opponentstate)
+            totalValuation --;
 
         k=1;
         while(i+k <  B.M && k<B.K+1 && j+k <  B.N && B.B[i+k][j+k] != opponentstate){   // forward check
+            if(B.B[i+k][j+k] == cell.state){
+                totalValuation ++;
+            }
             cellCount++;k++;
         }
+        if(i+k <  B.M && j+k <  B.N && B.B[i+k][j+k] == opponentstate && cellCount < B.K)
+            totalValuation --;
 
-        if (cellCount >= B.K) totalValuation += 1;
+        if (cellCount >= B.K) totalValuation += 2;
+        else totalValuation = 0;
+        sum = totalValuation + sum;
 
         //antidiagonale check
         k=1;
         cellCount=1;
         while(i-k >= 0 && j+k < B.N && k<B.K+1 && B.B[i-k][j+k] != opponentstate){     // backward check
+            if(B.B[i-k][j+k] == cell.state){
+                totalValuation ++;
+            }
             cellCount++;k++;
         }
+        if(i-k >= 0 && j+k < B.N &&  B.B[i-k][j+k] == opponentstate)
+            totalValuation --;
+
         k=1;
         while(i+k <  B.M && j-k >= 0 && k<B.K+1 && B.B[i+k][j-k] != opponentstate){   // forward check
+            if(B.B[i+k][j-k] == cell.state){
+                totalValuation ++;
+            }
             cellCount++;k++;
         }
+        if(i+k <  B.M && j-k >= 0 &&  B.B[i+k][j-k] == opponentstate && cellCount < B.K)
+            totalValuation --;
 
-        if (cellCount >= B.K) totalValuation += 1;
+        if (cellCount >= B.K) totalValuation += 2;
+        else totalValuation = 0;
+        sum = totalValuation + sum;
 
-        return totalValuation;
+        /*if(cell.state == MNKCellState.P1){
+            StampGame(B.getMarkedCells(), B);
+            System.out.println(sum + "\t" + i + '-'+ j + '\n');
+        }*/
+        return sum;
     }
 
     private int check(MNKCell cell, MNKBoard B){
@@ -643,11 +725,16 @@ public class Heuristic {
         if (CurrPlayer==0 && OppPlayer==0){
             for (MNKCell c : MARKED){
                 valuation=checkBis(c,B);
-                if (c.state == MNKCellState.P1) MaxPlayerValue += valuation;
-                else MinPlayerValue -= valuation;
+               // System.out.println(valuation);
+                if (c.state == MNKCellState.P1) MaxPlayerValue = MaxPlayerValue +  valuation;
+                else MinPlayerValue = MinPlayerValue - valuation;
             }
+        
+            //System.out.println("max: "+ MaxPlayerValue);
+            //System.out.println("min: "+ MinPlayerValue+ '\n');
         }
 
         return (CurrPlayer==0 && OppPlayer==0) ? CurrPlayer-OppPlayer : MaxPlayerValue+MinPlayerValue;
+    
     }
 }
