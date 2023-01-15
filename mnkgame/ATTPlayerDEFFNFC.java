@@ -91,9 +91,9 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
                     }
                 }
             }
-            boolean NoUpdate = Math.abs(bestvalue) ==1000000;
-            if (NoUpdate && DepthCount==1) return;
-            if ((!TimeFinish || DepthCount == 1) && !NoUpdate) {
+            boolean NoUpdate = Math.abs(bestvalue) >= 1000000;
+            if (NoUpdate && DepthCount==1) return;      //se ad altezza 1 non ci sono soluzioni in cui si evita la sconfitta si ritorna subito
+            if ((!TimeFinish || DepthCount == 1 || (BigSize && DepthCount <= 2 )) && !NoUpdate) {
                 NewBestValue = bestvalue;
                 NewBestCell = BestIterativeCell;   //se non finisce di ispezionare tutta l'altezza riporta la bestcell trovata prima
             }
@@ -267,7 +267,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
         NewBestCell = FC[0];
 
         IterativeDeepening(MaxPlayerA,(B.M*B.N)-MC.length);
-
+        /*
         if (BigSize && DepthCount<=2) {
             NFCell[] Arr = NFC.getValidArray();
             for (NFCell d : Arr) {
@@ -287,6 +287,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
             TT.clear();
             return Arr[0];
         }
+        */
 
         B.markCell(NewBestCell.i,NewBestCell.j);
         NFC.fillNFCplus(NewBestCell,B);
