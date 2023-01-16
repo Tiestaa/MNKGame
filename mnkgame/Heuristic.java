@@ -249,6 +249,14 @@ public class Heuristic {
                     if (currentPlayerNode) return 150;
                     else return 1200;
                 }
+                else{
+                    if (currentPlayerNode)return 60;
+                    else return 1000;
+                }
+            }
+            else if (isHorOpen(start, arrive, B)==1){
+                if (currentPlayerNode)return 60;
+                else return 1000;
             }
         }
         return 0;
@@ -336,6 +344,14 @@ public class Heuristic {
                     if (currentPlayerNode) return 150;
                     else return 1200;
                 }
+                else{
+                    if (currentPlayerNode)return 60;
+                    else return 1000;
+                }
+            }
+            else if (isVerOpen(start, arrive, B)==1){
+                if (currentPlayerNode)return 60;
+                else return 1000;
             }
         }
         return 0;
@@ -419,7 +435,15 @@ public class Heuristic {
                 if (!jump) {
                     if (currentPlayerNode)return 150;
                     else return 1200;
-                };
+                }
+                else{
+                    if (currentPlayerNode)return 60;
+                    else return 1000;
+                }
+            }
+            else if (isDiagOpen(start, arrive, B)==1){
+                if (currentPlayerNode)return 60;
+                else return 1000;
             }
         }
         return 0;
@@ -505,7 +529,15 @@ public class Heuristic {
                 if (!jump) {
                     if (currentPlayerNode)return 150;
                     else return 1200;
-                };
+                }
+                else {
+                    if (currentPlayerNode)return 60;
+                    else return 1000;
+                }
+            }
+            else if (isAntiDiagOpen(start, arrive, B)==1){
+                if (currentPlayerNode)return 60;
+                else return 1000;
             }
         }
         return 0;
@@ -519,11 +551,11 @@ public class Heuristic {
         int MinPlayerValue=0;
 
         if (B.gameState()==MNKGameState.WINP1) {
-            return 1000000;
+            return Integer.MAX_VALUE;
         }
 
         else if (B.gameState()==MNKGameState.WINP2) {
-            return -1000000;
+            return Integer.MIN_VALUE;
         }
         else if (B.gameState()==MNKGameState.DRAW) {
             return 0;
@@ -554,6 +586,10 @@ public class Heuristic {
                 if  (currentPlayerCell) CurrPlayer += valuation;
                 else OppPlayer += valuation;
             }
+
+            valuation= check(c,B);
+                if (c.state == MNKCellState.P1) MaxPlayerValue = MaxPlayerValue +  valuation;
+                else MinPlayerValue = MinPlayerValue - valuation;
         }
 
         CurrPlayer = CurrPlayer * 100;
@@ -561,6 +597,7 @@ public class Heuristic {
 
         hor.clear(); ver.clear(); diag.clear(); antidiag.clear();
 
+        /* 
         if (CurrPlayer==0 && OppPlayer==0){
             for (MNKCell c : MARKED){
                 valuation= check(c,B);
@@ -568,11 +605,17 @@ public class Heuristic {
                 else MinPlayerValue = MinPlayerValue - valuation;
             }
         }
+        
+
+
 
         int toReturn = 0;
         if (CurrPlayer!=0 && OppPlayer!=0) toReturn = (CurrPlayer-OppPlayer);
         else toReturn = (MaxPlayerValue+MinPlayerValue);
         return toReturn;
-    
+        */
+
+        int toReturn = MaxPlayerValue+MinPlayerValue + (CurrPlayer-OppPlayer);
+        return toReturn;
     }
 }
