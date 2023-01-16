@@ -4,6 +4,9 @@
 # Log file
 *.log
 
+#folder
+folder_to_ignore/claudio
+
 # BlueJ files
 *.ctxt
 
