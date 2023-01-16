@@ -18,7 +18,7 @@ public class Heuristic {
         diag = new HashSet<>();
         antidiag = new HashSet<>();
     }
-    
+
     private int check(MNKCell cell, MNKBoard B){
 
         MNKCellState opponentstate = (cell.state == MNKCellState.P1) ? MNKCellState.P2 : MNKCellState.P1;       //funziona
@@ -555,6 +555,9 @@ public class Heuristic {
                 else OppPlayer += valuation;
             }
         }
+
+        CurrPlayer = CurrPlayer * 100;
+        OppPlayer = OppPlayer * 100; 
 
         hor.clear(); ver.clear(); diag.clear(); antidiag.clear();
 
