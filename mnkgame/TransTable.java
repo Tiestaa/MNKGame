@@ -179,28 +179,5 @@ public class TransTable {
     public long getSpec_Zobby(){
         return spec_Zobby;
     }
-
-    public static void main(String[] args){
-        TransTable TT = new TransTable(3, 3);
-        MNKBoard B = new MNKBoard(3, 3, 3);
-        MNKCell c = new MNKCell(1, 0);
-        MNKCell c2 = new MNKCell(0, 0);
-        System.out.println(TT.getZobby());
-        B.markCell(c.i,c.j);
-        TT.getMainKey(B,c);
-        System.out.println(TT.getZobby());
-
-        B.markCell(c2.i, c2.j);
-        TT.getMainKey(B,c2);
-        System.out.println(TT.getZobby());
-
-        B.unmarkCell();
-        TT.getMainKey(B,c2);
-        System.out.println(TT.getZobby());
-
-        B.unmarkCell();
-        TT.getMainKey(B,c);
-        System.out.println(TT.getZobby());
-    }
 }
 
