@@ -18,37 +18,8 @@ public class Heuristic {
         diag = new HashSet<>();
         antidiag = new HashSet<>();
     }
-
-    public void StampGame(MNKCell[] MC, MNKBoard B) {
-        MNKCell c1, c2;
-        boolean found = false;
-        for (int i = 0; i < B.M; i++) {
-            for (int j = 0; j < B.N; j++) {
-                c1 = new MNKCell(i, j, MNKCellState.P1);
-                c2 = new MNKCell(i, j, MNKCellState.P2);
-                for (MNKCell M : MC) {
-                    if (M.i == c1.i && M.j == c1.j && M.state == c1.state) {
-                        System.out.print("X ");
-                        found = true;
-                        break;
-                    } else if (M.i == c1.i && M.j == c1.j && M.state == c2.state) {
-                        System.out.print("O ");
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    System.out.print("_ ");
-                }
-                found = false;
-            }
-            System.out.print("\n");
-        }
-        System.out.println("------");
-    }
-    private int checkBis(MNKCell cell, MNKBoard B){
-
-        //NON FUNZIONA
+    
+    private int check(MNKCell cell, MNKBoard B){
 
         MNKCellState opponentstate = (cell.state == MNKCellState.P1) ? MNKCellState.P2 : MNKCellState.P1;       //funziona
         int i=cell.i;
@@ -60,221 +31,88 @@ public class Heuristic {
         //Horizontal check
         int k=1;
         while(j-k >= 0 && k<B.K && B.B[i][j-k] != opponentstate){     // backward check
-            if(B.B[i][j-k] == cell.state){
-                totalValuation ++;
-            }
+            if(B.B[i][j-k] == cell.state)totalValuation ++;
             cellCount++;k++;
         }
-        if(j-k >= 0 && B.B[i][j-k] == opponentstate)
-            totalValuation --;
-
+        
+        if(j-k >= 0 && B.B[i][j-k] == opponentstate) totalValuation --;
+        
         k=1;
         while(j+k <  B.N && k<B.K+1 && B.B[i][j+k] != opponentstate){        // forward check
-            if(B.B[i][j+k] == cell.state){
-                totalValuation ++;
-            }
+            if(B.B[i][j+k] == cell.state) totalValuation ++;
             cellCount++;k++;
         }
-        if(j+k <  B.N && B.B[i][j+k] == opponentstate && cellCount < B.K)
-            totalValuation --;
-
+        
+        if(j+k <  B.N && B.B[i][j+k] == opponentstate) totalValuation --;
+        
         if (cellCount >= B.K) totalValuation += 2;
-        else totalValuation = 0;
+        else totalValuation = totalValuation<0? totalValuation : 0;
         sum = totalValuation + sum;
 
         // Vertical check
         k=1;
         cellCount=1;
         while(i-k >= 0 && k<B.K+1 && B.B[i-k][j] != opponentstate){     // backward check
-            if(B.B[i-k][j] == cell.state){
-                totalValuation ++;
-            }
+            if(B.B[i-k][j] == cell.state) totalValuation ++;
             cellCount++;k++;
         }
-        if(i-k >= 0 && B.B[i-k][j] == opponentstate)
-            totalValuation --;
+        
+        if(i-k >= 0 && B.B[i-k][j] == opponentstate) totalValuation --;
         
         k=1;
-        while(i+k <  B.M && k<B.K+1 && B.B[i+k][j] != opponentstate){     // forward check
-            if(B.B[i+k][j] == cell.state){
-                totalValuation ++;
-            }
+        while(i+k <  B.M && k<B.K+1 && B.B[i+k][j] != opponentstate){     // forward check 
+            if(B.B[i+k][j] == cell.state) totalValuation ++;
             cellCount++;k++;
         }
-        if(i+k <  B.M && B.B[i+k][j] == opponentstate && cellCount < B.K)
-            totalValuation --;
+        
+        if(i+k <  B.M && B.B[i+k][j] == opponentstate) totalValuation --;
 
         if (cellCount >= B.K) totalValuation += 2;
-        else totalValuation = 0;
+        else totalValuation = totalValuation<0? totalValuation : 0;
         sum = totalValuation + sum;
 
         //diagonal check
         k=1;
         cellCount=1;
         while(i-k >= 0 && j-k >= 0 && k<B.K+1 && B.B[i-k][j-k]  != opponentstate){     // backward check
-            if(B.B[i-k][j-k] == cell.state){
-                totalValuation ++;
-            }
+            if(B.B[i-k][j-k] == cell.state) totalValuation ++;
             cellCount++;k++;
         }
-        if(i-k >= 0 && j-k >= 0 && B.B[i-k][j-k] == opponentstate)
-            totalValuation --;
-
+        if(i-k >= 0 && j-k >= 0 && B.B[i-k][j-k] == opponentstate) totalValuation --;
+        
         k=1;
         while(i+k <  B.M && k<B.K+1 && j+k <  B.N && B.B[i+k][j+k] != opponentstate){   // forward check
-            if(B.B[i+k][j+k] == cell.state){
-                totalValuation ++;
-            }
+            if(B.B[i+k][j+k] == cell.state) totalValuation ++;
             cellCount++;k++;
         }
-        if(i+k <  B.M && j+k <  B.N && B.B[i+k][j+k] == opponentstate && cellCount < B.K)
-            totalValuation --;
-
+        
+        if(i+k <  B.M && j+k <  B.N && B.B[i+k][j+k] == opponentstate) totalValuation --;
+        
         if (cellCount >= B.K) totalValuation += 2;
-        else totalValuation = 0;
+        else totalValuation = totalValuation<0 ? totalValuation : 0;
         sum = totalValuation + sum;
 
         //antidiagonale check
         k=1;
         cellCount=1;
         while(i-k >= 0 && j+k < B.N && k<B.K+1 && B.B[i-k][j+k] != opponentstate){     // backward check
-            if(B.B[i-k][j+k] == cell.state){
-                totalValuation ++;
-            }
+            if(B.B[i-k][j+k] == cell.state) totalValuation ++;
             cellCount++;k++;
         }
-        if(i-k >= 0 && j+k < B.N &&  B.B[i-k][j+k] == opponentstate)
-            totalValuation --;
-
+        
+        if(i-k >= 0 && j+k < B.N &&  B.B[i-k][j+k] == opponentstate) totalValuation --;
+        
         k=1;
         while(i+k <  B.M && j-k >= 0 && k<B.K+1 && B.B[i+k][j-k] != opponentstate){   // forward check
-            if(B.B[i+k][j-k] == cell.state){
-                totalValuation ++;
-            }
+            if(B.B[i+k][j-k] == cell.state) totalValuation ++;
             cellCount++;k++;
         }
-        if(i+k <  B.M && j-k >= 0 &&  B.B[i+k][j-k] == opponentstate && cellCount < B.K)
-            totalValuation --;
 
+        if(i+k <  B.M && j-k >= 0 &&  B.B[i+k][j-k] == opponentstate) totalValuation --;
+    
         if (cellCount >= B.K) totalValuation += 2;
-        else totalValuation = 0;
+        else totalValuation = totalValuation<0? totalValuation : 0;
         sum = totalValuation + sum;
-
-        /*if(cell.state == MNKCellState.P1){
-            StampGame(B.getMarkedCells(), B);
-            System.out.println(sum + "\t" + i + '-'+ j + '\n');
-        }*/
-        return sum;
-    }
-
-    private int check(MNKCell cell, MNKBoard B){
-
-        MNKCellState opponentstate = (cell.state == MNKCellState.P1) ? MNKCellState.P2 : MNKCellState.P1;
-        int i=cell.i;
-        int j=cell.j;
-        int totalValuation=0;
-        int totalcell=1;        //celle vuote e di cell.state 
-        int totalmycell=1;
-        boolean canBeAligned=true; 
-
-        // Horizontal check
-        int k=1;
-        while(j-k >= 0 && k<B.K+1 && B.B[i][j-k] != opponentstate){     // backward check
-            if (B.B[i][j-k] == cell.state)
-                if (canBeAligned) totalmycell++;
-            else canBeAligned=false;
-            totalcell++;k++;
-        }
-
-        canBeAligned=true;
-        k=1;
-        while(j+k <  B.N && k<B.K+1 &&B.B[i][j+k] != opponentstate){   // forward check
-            if (B.B[i][j+k] == cell.state)
-                if (canBeAligned) totalmycell++;
-            else canBeAligned=false;
-            totalcell++;k++;
-        }
-
-        totalValuation += valuecheck(totalcell,totalmycell,B.K);
-
-        // Vertical check;
-        canBeAligned=true;
-        totalmycell=1;
-        totalcell=1;
-        k=1;
-        while(i-k >= 0 && k<B.K+1 && B.B[i-k][j] != opponentstate){     // backward check
-            if (B.B[i-k][j] == cell.state)
-                if (canBeAligned) totalmycell++;
-            else canBeAligned=false;
-            totalcell++;k++;
-        }
-        canBeAligned=true;
-        k=1;
-        while(i+k <  B.M && k<B.K+1 && B.B[i+k][j] != opponentstate){     // forward check
-            if (B.B[i+k][j] == cell.state)
-                if (canBeAligned) totalmycell++;
-            else canBeAligned=false;
-            totalcell++;k++;
-        }
-
-        totalValuation += valuecheck(totalcell,totalmycell,B.K);
-
-        // Diagonal check
-        canBeAligned=true;
-        totalmycell=1;
-        totalcell=1;
-        k=1;
-        while(i-k >= 0 && j-k >= 0 && k<B.K+1 && B.B[i-k][j-k]  != opponentstate){     // backward check
-            if (B.B[i-k][j-k] == cell.state)
-                if (canBeAligned) totalmycell++;
-            else canBeAligned=false;
-            totalcell++;k++;
-        }
-        canBeAligned=true;
-        k=1;
-        while(i+k <  B.M && k<B.K+1 && j+k <  B.N && B.B[i+k][j+k] != opponentstate){   // forward check
-            if (B.B[i+k][j+k] == cell.state)
-                if (canBeAligned) totalmycell++;
-            else canBeAligned=false;
-            totalcell++;k++;
-        }
-
-        totalValuation += valuecheck(totalcell,totalmycell,B.K);
-
-        // Anti-diagonal check
-        canBeAligned=true;
-        totalmycell=1;
-        totalcell=1;
-        k=1;
-        while(i-k >= 0 && j+k < B.N && k<B.K+1 && B.B[i-k][j+k] != opponentstate){     // backward check
-            if (B.B[i-k][j+k] == cell.state)
-                if (canBeAligned) totalmycell++;
-            else canBeAligned=false;
-            totalcell++;k++;
-        }
-        canBeAligned=true;
-        k=1;
-        while(i+k <  B.M && j-k >= 0 && k<B.K+1 && B.B[i+k][j-k] != opponentstate){   // forward check
-            if (B.B[i+k][j-k] == cell.state)
-                if (canBeAligned) totalmycell++;
-            else canBeAligned=false;
-            totalcell++;k++;
-        }
-
-        totalValuation += valuecheck(totalcell,totalmycell,B.K);
-
-        return totalValuation;
-    }
-
-    private int valuecheck(int totalcell, int totalMyCell, int K){
-        int sum=0;
-        if (totalcell > K){     // se è maggiore di k vuol dire che lì si può creare una minaccia, dunque aumento il valore della value
-            if (totalcell>K*2) sum+=totalcell*6;
-            else sum+=totalcell*4;
-        }
-        else if (totalcell==K) sum+=totalcell*2;      // se è uguale a K vuol dire che si può creare una minaccia ma facilmente bloccabile, dunque lo lascio così
-        //in caso le celle siano minori di k vuol dire che sicuramente non ci potrà essere una minaccia
-        sum+=totalMyCell;
 
         return sum;
     }
@@ -640,8 +478,6 @@ public class Heuristic {
             k++;
         }
 
-
-
         if (count==B.K-1){
             if (isAntiDiagOpen(start,arrive,B)==2) {
                 if (!jump) {
@@ -724,7 +560,7 @@ public class Heuristic {
 
         if (CurrPlayer==0 && OppPlayer==0){
             for (MNKCell c : MARKED){
-                valuation=checkBis(c,B);
+                valuation= check(c,B);
                 if (c.state == MNKCellState.P1) MaxPlayerValue = MaxPlayerValue +  valuation;
                 else MinPlayerValue = MinPlayerValue - valuation;
             }
