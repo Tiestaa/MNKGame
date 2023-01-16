@@ -20,8 +20,8 @@ public class ArrayNFC{
         if(d != null){
             String istring = Integer.toString(d.i);
             String jstring = Integer.toString(d.j);
-            String ijstring = istring + jstring;
-            return Integer.parseInt(ijstring);
+            String K = istring + jstring;
+            return Integer.parseInt(K);
         }
         return -1;
     }
