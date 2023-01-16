@@ -2,8 +2,8 @@ package mnkgame;
 
 public class NFCell extends MNKCell implements Comparable<NFCell> {
 
-    private int count;   // ci tiene traccia di quante volte è nell'nfc per non essere eliminato
-    private int valuation;
+    private int count;      // tiene traccia di quante volte è nell'nfc per non essere eliminato
+    private int valuation;  // ????
 
     public NFCell(int i, int j, int count) {
         super(i, j);
