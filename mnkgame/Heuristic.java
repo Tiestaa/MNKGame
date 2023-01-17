@@ -18,7 +18,7 @@ public class Heuristic {
         diag = new HashSet<>();
         antidiag = new HashSet<>();
     }
-
+    
     private int check(MNKCell cell, MNKBoard B){
 
         MNKCellState opponentstate = (cell.state == MNKCellState.P1) ? MNKCellState.P2 : MNKCellState.P1;       //funziona
@@ -117,130 +117,158 @@ public class Heuristic {
         return sum;
     }
 
-    private int isAntiDiagOpen(MNKCell start, MNKCell arrive, MNKBoard B) {
+    private int isOpen(MNKCell start, MNKCell arrive, MNKBoard B,char mode){
         int hole = 0;
-        if (start.i - 1 >= 0 && start.j+1< B.N && B.B[start.i-1][start.j+1] == MNKCellState.FREE) {
-            hole++;
+        boolean border1 = false, border2 = false;
+        int x = 0,y = 0,w = 0,z = 0;
+        switch (mode){
+            case ('A'):
+                border1 = start.j+1 < B.N; border2 = arrive.j-1 >= 0;
+                x = start.i-1; y = start.j+1;
+                w = arrive.i+1; z = arrive.j-1;
+                break;
+            
+            case ('D'):
+                border1 = start.j-1 >= 0; border2 = arrive.j+1 < B.N;
+                x = start.i-1; y = start.j-1;
+                w = arrive.i+1; z = arrive.j+1;
+                break;
+            
+            case ('V'):
+                border1 = border2 = true;
+                x = start.i-1; y = start.j;
+                w = arrive.i+1; z = arrive.j;
+                break;
+            
+            case ('H'):
+                border1 = border2 = true;
+                x = start.i; y = start.j-1;
+                w = arrive.i; z = arrive.j+1;
+                break; 
         }
-        if (arrive.i + 1 < B.M && arrive.j-1 >=0 && B.B[arrive.i+1][arrive.j-1] == MNKCellState.FREE) {
+        
+        if (start.i - 1 >= 0 && border1 && B.B[x][y] == MNKCellState.FREE)
             hole++;
-        }
-        return hole;
-    }
-    private int isDiagOpen(MNKCell start, MNKCell arrive, MNKBoard B) {
-        int hole = 0;
-        if (start.i - 1 >= 0 && start.j-1>=0 && B.B[start.i-1][start.j-1] == MNKCellState.FREE) {
-            hole++;
-        }
-        if (arrive.i + 1 < B.M && arrive.j+1 <B.N && B.B[arrive.i+1][arrive.j+1] == MNKCellState.FREE) {
-            hole++;
-        }
-        return hole ;
-    }
-    private int isVerOpen(MNKCell start, MNKCell arrive, MNKBoard B) {
-        int hole = 0;
-        if (start.i - 1 >= 0 && B.B[start.i-1][start.j] == MNKCellState.FREE) {
-            hole++;
-        }
-        if (arrive.i + 1 < B.M && B.B[arrive.i+1][arrive.j] == MNKCellState.FREE) {
-            hole++;
-        }
-        return hole ;
-    }
-    private  int isHorOpen(MNKCell start, MNKCell arrive, MNKBoard B) {
 
-        int hole = 0;
-        if (start.j - 1 >= 0 && B.B[start.i][start.j-1] == MNKCellState.FREE) {
+        if (arrive.i + 1 < B.M && border2 && B.B[w][z] == MNKCellState.FREE)
             hole++;
-        }
-        if (arrive.j + 1 < B.N && B.B[arrive.i][arrive.j + 1] == MNKCellState.FREE) {
-            hole++;
-        }
+
         return hole;
     }
 
-    private int evaluateHorThreat(MNKCell c, MNKBoard B) {
+    private int evaluateThreat(MNKCell c, MNKBoard B, char mode) {
         int i = c.i;
         int j = c.j;
-        int count = 1;  //numero di celle "consecutive"
+        int count = 1;            // celle "consecutive"
         MNKCellState opponentstate= c.state == MNKCellState.P1 ? MNKCellState.P2: MNKCellState.P1;
         int k = 1;
-        boolean jump = false;     //mi tiene traccia di un salto di una cella vuota
-        boolean flag = true;      //in caso di salto già avvenuto, il while si ferma
+        boolean jump = false;     // mi tiene traccia di un salto di una cella vuota
+        boolean flag = true;      // in caso di salto già avvenuto, il while si ferma
         boolean currentPlayerNode = (B.currentPlayer()==0 && c.state==MNKCellState.P1)||(B.currentPlayer() == 1 && c.state==MNKCellState.P2);
 
-        //prendo le celle di start e arrivo per verificare successivamente che celle ci sono alle estremità,
-        //partono entrambe dalla stessa cella
+        /*start e arrivo per verificare successivamente che celle ci sono alle estremità,
+          partono entrambe dalla stessa cella*/
         MNKCell start = c;
         MNKCell arrive = c;
 
+        int x = 0,y = 0,ys = 0,xs = 0;
+        boolean cond0 = false, cond1 = false, cond2 = false , cond3 = false;
+        switch(mode){
+            case('H'):
+                x = i; y = j - k;  
+                xs = i ; ys = j + k; 
+                cond0 = j - k >= 0;
+                cond1 = y - 1 >= 0 && B.B[x][y - 1] == c.state;
+                cond2 = j + k < B.N ; 
+                cond3 = ys + 1 < B.N && B.B[xs][ys + 1] == c.state;
+                break;
+            case('V'):
+                x = i - k; y = j;  
+                xs = i+k; ys = j; 
+                cond0 = i-k >=0;
+                cond1 = i-k-1 >=0 && B.B[i-k-1][j]==c.state;
+                cond2 =  i+k < B.M; 
+                cond3 = i+k+1 < B.M && B.B[i+k+1][j]==c.state;
+                break;
+            case('D'):
+                x = i - k; y = j - k;  
+                xs = i+k; ys = j + k;
+                cond0 = i-k>=0 && j-k>=0;
+                cond1 = i - k - 1 >= 0 && j - k - 1 >= 0 && B.B[i - k - 1][j - k - 1] == c.state;
+                cond2 =  i+k < B.M && j+k < B.N; 
+                cond3 = i+k+1 < B.M && j+k+1 < B.N && B.B[i+k+1][j+k+1] == c.state;
+                break;
+            case('A'):
+                x = i - k; y = j + k;  
+                xs = i+k; ys = j - k; 
+                cond0 = i-k >= 0 && j+k < B.N;
+                cond1 = i-k-1 >=0 && j+k+1 < B.N && B.B[i-k-1][j+k+1] == c.state;
+                cond2 = i+k <B.M && j-k >= 0; 
+                cond3 = i+k+1 < B.M && j-k-1>=0 && B.B[i+k+1][j-k-1] == c.state;
+            
+        }
+
         //backward
-        while (flag && j - k >= 0 && k < B.K && B.B[i][j - k] != opponentstate) {
-            if (B.B[i][ j - k] == MNKCellState.FREE) {
+        while (flag && cond0 && k < B.K && B.B[x][y] != opponentstate) {
+            if (B.B[x][y] == MNKCellState.FREE) {
                 if (!jump) {
-                    //se non ha saltato vado a vedere la cella ancora precedente, se è occupata dallo stesso player allora effettuo il salto
-                    if (j - k - 1 >= 0 && B.B[i][j - k - 1] == c.state) {
+                    if (cond1)                                   // if(non ha saltato): vado a vedere la cella precedente, if (è occupata dallo stesso player): effettuo il salto
                         jump = true;
-                    } else flag = false;        //se trovo due celle consecutive vuote non ha senso parlare di salto, quindi si ferma il while con jump=false
-                } else {
-                    flag = false;       //se ha già saltato e trova un'altra cella vuota si ferma
-                }
+                    else 
+                        flag = false;                            // if(trovo due celle consecutive vuote): si ferma il while con jump = false 
+                } 
+                else 
+                    flag = false;                                // if(ha già saltato e trova un'altra cella vuota): si ferma
             } else {
-                start = new MNKCell(i, j - k, c.state); //scalo lo start alla nuova cella trovata
+                start = new MNKCell(x, y, c.state);              // start = nuova cella trovata
                 count++;
-                hor.add(start);         //aggiungo la nuova cella in modo da non contare più volte la stessa minaccia
-
+                addmode(mode, start);                            // aggiungo la nuova cella in modo da non contare più volte la stessa minaccia
             }
             k++;
         }
 
-        //simmetrico al backward
-        //forward
-        flag = true;
-        k = 1;
-        while (flag && j + k < B.N && k < B.K && B.B[i][j + k] != opponentstate) {
-            if (B.B[i][j + k] == MNKCellState.FREE) {
+        //forward (simmetrico al backward)
+        flag = true; k = 1;
+        while (flag && cond2 && k < B.K && B.B[xs][ys] != opponentstate) {
+            if (B.B[xs][ys] == MNKCellState.FREE) {
                 if (!jump) {
-                    if (j + k + 1 < B.N && B.B[i][j + k + 1] == c.state) {
+                    if (cond3) 
                         jump = true;
-                    } else flag = false;
-                } else {
+                    else 
+                        flag = false;
+                }
+                else 
                     flag = false;
-                }
             } else {
-                arrive = new MNKCell(i, j + k, c.state);        //modifico l'arrive
+                arrive = new MNKCell(xs, ys, c.state);           //modifico l'arrive
                 count++;
-                hor.add(arrive);
+                addmode(mode, arrive);
             }
             k++;
         }
 
-        //controllo di che tipo di minaccia si tratta
-        if (count==B.K-1){
-            if (isHorOpen(start,arrive,B)==2) {
-                if (!jump) {
-                    if (currentPlayerNode) return 250;
+        /* controllo di che tipo di minaccia si tratta */
+        if (count == B.K-1){                                
+            if (isOpen(start,arrive,B,mode) == 2) {     // k-1 halfopen: allineati, estremi liberi
+                if (!jump) {                            // con salto
+                    if (currentPlayerNode) return 250; 
                     else return 5020;
-                } else {
-                    //k-1 halfopen,allineati con estremi liberi ma con un salto
-                    if (currentPlayerNode) return 80;
+                } else {                                
+                    if (currentPlayerNode) return 80;   // senza salto
                     else return 1500;
                 }
             }
-            else if (isHorOpen(start,arrive,B)==1) {
-                //k-1 halfopen,allineati con un estremo libero senza/con un salto
-                if (currentPlayerNode) return 80;
+            else if (isOpen(start,arrive,B,mode)==1) {  // k-1 halfopen: allineati, un estremo libero
+                if (currentPlayerNode) return 80;       
                 else return 1500;
             }
-            else {
-                if (jump) {
-                    //k-1 allineati con estremi non liberi ma con un salto
+            else {                                      // allineati, estremi non liberi, salto
+                if (jump) {                 
                     if (currentPlayerNode) return 80;
                     else return 1500;
                 }
             }
         }
-
         else if (count == B.K - 2) {
 
             if (isHorOpen(start, arrive,B) == 2) {
@@ -249,14 +277,6 @@ public class Heuristic {
                     if (currentPlayerNode) return 150;
                     else return 1200;
                 }
-                else{
-                    if (currentPlayerNode)return 60;
-                    else return 1000;
-                }
-            }
-            else if (isHorOpen(start, arrive, B)==1){
-                if (currentPlayerNode)return 60;
-                else return 1000;
             }
         }
         return 0;
@@ -435,15 +455,7 @@ public class Heuristic {
                 if (!jump) {
                     if (currentPlayerNode)return 150;
                     else return 1200;
-                }
-                else{
-                    if (currentPlayerNode)return 60;
-                    else return 1000;
-                }
-            }
-            else if (isDiagOpen(start, arrive, B)==1){
-                if (currentPlayerNode)return 60;
-                else return 1000;
+                };
             }
         }
         return 0;
@@ -529,15 +541,7 @@ public class Heuristic {
                 if (!jump) {
                     if (currentPlayerNode)return 150;
                     else return 1200;
-                }
-                else {
-                    if (currentPlayerNode)return 60;
-                    else return 1000;
-                }
-            }
-            else if (isAntiDiagOpen(start, arrive, B)==1){
-                if (currentPlayerNode)return 60;
-                else return 1000;
+                };
             }
         }
         return 0;
@@ -567,22 +571,22 @@ public class Heuristic {
             currentPlayerCell=(c.state == MNKCellState.P1 && B.currentPlayer()==0) ||(c.state==MNKCellState.P2 && B.currentPlayer()==1);
 
             if (!hor.contains(c)) {
-                valuation = evaluateHorThreat(c, B);
+                valuation = evaluateThreat(c,B,'H');
                 if  (currentPlayerCell) CurrPlayer += valuation;
                 else OppPlayer += valuation;
             }
             if (!ver.contains(c)) {
-                valuation = evaluateVerThreat(c, B);
+                valuation = evaluateThreat(c,B,'V');
                 if  (currentPlayerCell) CurrPlayer += valuation;
                 else OppPlayer += valuation;
             }
             if (!diag.contains(c)) {
-                valuation = evaluateDiagThreat(c, B);
+                valuation = evaluateThreat(c,B, 'D');
                 if  (currentPlayerCell) CurrPlayer += valuation;
                 else OppPlayer += valuation;
             }
             if (!antidiag.contains(c)) {
-                valuation = evaluateAntiDiagThreat(c, B);
+                valuation = evaluateThreat(c,B,'A');
                 if  (currentPlayerCell) CurrPlayer += valuation;
                 else OppPlayer += valuation;
             }
