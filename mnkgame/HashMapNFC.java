@@ -3,17 +3,16 @@ package mnkgame;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 
 public class ArrayNFC{
-    private final NFCell[] NFC;
+    private final HashMap<Integer,NFCell> NFC;
 
     public ArrayNFC(int M,int N){
         String totaln = Integer.toString(M-1);
         String totalm = Integer.toString(N-1);
         String totalmn = totaln + totalm;
-        NFC = new NFCell[Integer.parseInt(totalmn)+1];
-        for (int i = 0; i < Integer.parseInt(totalmn)+1; i++)
-            NFC[i] = null;
+        NFC = new HashMap<Integer,NFCell>();        //inserire dimensinoe minima attraverso totalmn
     }
 
     private int stringConversion(MNKCell d){
@@ -27,44 +26,20 @@ public class ArrayNFC{
     }
 
     public boolean contains(MNKCell d){
-        if(d != null){
-            int ijstr = stringConversion(d);
-            return (NFC[ijstr] != null);
-        }
-        return false;
+        return NFC.containsValue(d);
     }
 
     private void add(MNKCell d, int count){
-            NFC[stringConversion(d)] = new NFCell(d.i,d.j,count);
+        NFC.put(stringConversion(d),new NFCell(d.i,d.j,count));
     }
-    private void delete(MNKCell d){
-        NFC[stringConversion(d)] = null;
+    private void delete(NFCell d){
+        NFC.remove(stringConversion(d),d);
     }
 
     public NFCell[] getArray(){
-        return NFC;
+        return (NFC.values()).toArray(new NFCell[0]); // returns an array of values
     }
 
-    public NFCell[] getValidArray(){
-        ArrayList<NFCell> ARRAY=new ArrayList<>(NFC.length);
-        for (NFCell c:NFC){
-            if (contains(c) && c.getCount()!=0) ARRAY.add(c);
-        }
-        return ARRAY.toArray(new NFCell[0]);
-    }
-
-
-    /*
-    public MNKCell[] getAscendingArray(){
-        Arrays.sort(NFC);
-        return NFC;
-    }
-
-    public MNKCell[] getDescendingArray(){
-        Arrays.sort(NFC, Collections.reverseOrder());
-        return NFC;
-    }
-     */
     private int numberNFC(MNKCell d,MNKBoard B){
         int count=0;
         if (d.i > 0) {
@@ -88,61 +63,69 @@ public class ArrayNFC{
         if (d.i > 0) {
             if (d.j > 0) {
                 if (B.cellState(d.i - 1, d.j - 1) == MNKCellState.FREE) {       //altosx
-                    MNKCell c= new MNKCell(d.i-1,d.j-1);
-                    if (NFC[stringConversion(c)]==null) add(c,numberNFC(c,B));
-                    else NFC[stringConversion(c)].increaseCount();
+                    MNKCell tmp=new MNKCell(d.i-1,d.j-1);
+                    NFCell c = NFC.get(stringConversion(tmp));
+                    if (c!=null) c.increaseCount();
+                    else add(tmp,numberNFC(tmp,B)); 
                 }
             }
             if (d.j < B.N - 1) {
                 if (B.cellState(d.i - 1, d.j + 1) == MNKCellState.FREE) {       //altodx
-                    MNKCell c= new MNKCell(d.i-1,d.j+1);
-                    if (NFC[stringConversion(c)]==null) add(c,numberNFC(c,B));
-                    else NFC[stringConversion(c)].increaseCount();
+                    MNKCell tmp=new MNKCell(d.i-1,d.j+1);
+                    NFCell c = NFC.get(stringConversion(tmp));
+                    if (c!=null) c.increaseCount();
+                    else add(tmp,numberNFC(tmp,B)); 
                 }
             }
             if (B.cellState(d.i - 1, d.j) == MNKCellState.FREE) {                   //alto
-                MNKCell c = new MNKCell(d.i - 1, d.j);
-                if (NFC[stringConversion(c)] == null) add(c, numberNFC(c, B));
-                else NFC[stringConversion(c)].increaseCount();
+                MNKCell tmp=new MNKCell(d.i-1,d.j);
+                NFCell c = NFC.get(stringConversion(tmp));
+                if (c!=null) c.increaseCount();
+                else add(tmp,numberNFC(tmp,B)); 
             }
         }
 
         if (d.i < B.M - 1) {
             if (d.j > 0) {
                 if (B.cellState(d.i + 1, d.j - 1) == MNKCellState.FREE) {       //bassosx
-                    MNKCell c= new MNKCell(d.i+1,d.j-1);
-                    if (NFC[stringConversion(c)]==null) add(c,numberNFC(c,B));
-                    else NFC[stringConversion(c)].increaseCount();
+                    MNKCell tmp=new MNKCell(d.i+1,d.j-1);
+                    NFCell c = NFC.get(stringConversion(tmp));
+                    if (c!=null) c.increaseCount();
+                    else add(tmp,numberNFC(tmp,B)); 
                 }
             }
             if (d.j < B.N - 1) {
                 if (B.cellState(d.i + 1, d.j + 1) == MNKCellState.FREE) {       //bassodx
-                    MNKCell c= new MNKCell(d.i+1,d.j+1);
-                    if (NFC[stringConversion(c)]==null) add(c,numberNFC(c,B));
-                    else NFC[stringConversion(c)].increaseCount();
+                    MNKCell tmp=new MNKCell(d.i+1,d.j+1);
+                    NFCell c = NFC.get(stringConversion(tmp));
+                    if (c!=null) c.increaseCount();
+                    else add(tmp,numberNFC(tmp,B)); 
                 }
             }
             if (B.cellState(d.i + 1, d.j) == MNKCellState.FREE) {                //basso
-                MNKCell c= new MNKCell(d.i+1,d.j);
-                if (NFC[stringConversion(c)]==null) add(c,numberNFC(c,B));
-                else NFC[stringConversion(c)].increaseCount();
+                MNKCell tmp=new MNKCell(d.i+1,d.j);
+                NFCell c = NFC.get(stringConversion(tmp));
+                if (c!=null) c.increaseCount();
+                else add(tmp,numberNFC(tmp,B)); 
             }
         }
         if (d.j>0){
             if (B.cellState(d.i, d.j - 1) == MNKCellState.FREE) {                  //sx
-                MNKCell c= new MNKCell(d.i,d.j-1);
-                if (NFC[stringConversion(c)]==null) add(c,numberNFC(c,B));
-                else NFC[stringConversion(c)].increaseCount();
+                MNKCell tmp=new MNKCell(d.i,d.j-1);
+                NFCell c = NFC.get(stringConversion(tmp));
+                if (c!=null) c.increaseCount();
+                else add(tmp,numberNFC(tmp,B)); 
             }
         }
         if (d.j < B.N-1){
             if (B.cellState(d.i, d.j + 1) == MNKCellState.FREE) {               //dx
-                MNKCell c= new MNKCell(d.i,d.j+1);
-                if (NFC[stringConversion(c)]==null) add(c,numberNFC(c,B));
-                else NFC[stringConversion(c)].increaseCount();
+                MNKCell tmp=new MNKCell(d.i,d.j+1);
+                NFCell c = NFC.get(stringConversion(tmp));
+                if (c!=null) c.increaseCount();
+                else add(tmp,numberNFC(tmp,B)); 
             }
         }
-        if(numberNFC(d, B)!=0) delete(d);
+        if(numberNFC(d, B)!=0) delete(new NFCell(d.i, d.j, 0));
     }
 
     public void deleteNFCplus(MNKCell d,MNKBoard B){
@@ -150,80 +133,72 @@ public class ArrayNFC{
         if (d.i > 0) {
             if (d.j > 0) {
                 if (B.cellState(d.i - 1, d.j - 1) == MNKCellState.FREE) {       //altosx
-                    MNKCell tmp = new MNKCell(d.i - 1, d.j - 1);
-                    if (contains(tmp)) {
-                        NFC[stringConversion(tmp)].decreaseCount();
-                        if (NFC[stringConversion(tmp)].getCount() == 0)
-                            delete(tmp);
+                    NFCell c = NFC.get(stringConversion(new MNKCell(d.i - 1, d.j - 1)));
+                    if (c!=null){
+                        c.decreaseCount();
+                        if (c.getCount()==0) delete(c);
                     }
                 }
             }
             if (d.j < B.N - 1) {
                 if (B.cellState(d.i - 1, d.j + 1) == MNKCellState.FREE) {       //altodx
-                    MNKCell tmp = new MNKCell(d.i - 1, d.j + 1);
-                    if (contains(tmp)) {
-                        NFC[stringConversion(tmp)].decreaseCount();
-                        if (NFC[stringConversion(tmp)].getCount() == 0)
-                            delete(tmp);
+                    NFCell c = NFC.get(stringConversion(new MNKCell(d.i - 1, d.j + 1)));
+                    if (c!=null){
+                        c.decreaseCount();
+                        if (c.getCount()==0) delete(c);
                     }
                 }
             }
             if (B.cellState(d.i - 1, d.j) == MNKCellState.FREE) {           //alto
-                MNKCell tmp=new MNKCell(d.i-1,d.j);
-                if (contains(tmp)) {
-                    NFC[stringConversion(tmp)].decreaseCount();
-                    if (NFC[stringConversion(tmp)].getCount() == 0)
-                        delete(tmp);
+                NFCell c = NFC.get(stringConversion(new MNKCell(d.i - 1, d.j)));
+                if (c!=null){
+                    c.decreaseCount();
+                    if (c.getCount()==0) delete(c);
                 }
             }
         }
         if (d.i < B.M - 1) {
             if (d.j > 0) {
                 if (B.cellState(d.i + 1, d.j - 1) == MNKCellState.FREE) {   //bassosx
-                    MNKCell tmp = new MNKCell(d.i + 1, d.j - 1);
-                    if (contains(tmp)) {
-                        NFC[stringConversion(tmp)].decreaseCount();
-                        if (NFC[stringConversion(tmp)].getCount() == 0)
-                            delete(tmp);
+                    NFCell c = NFC.get(stringConversion(new MNKCell(d.i + 1, d.j-1)));
+                    if (c!=null){
+                        c.decreaseCount();
+                        if (c.getCount()==0) delete(c);
                     }
                 }
             }
             if (d.j < B.N - 1) {
                 if (B.cellState(d.i + 1, d.j + 1) == MNKCellState.FREE) {       //bassodx
-                    MNKCell tmp = new MNKCell(d.i + 1, d.j + 1);
-                    if (contains(tmp)) {
-                        NFC[stringConversion(tmp)].decreaseCount();
-                        if (NFC[stringConversion(tmp)].getCount() == 0)
-                            delete(tmp);
+                    NFCell c = NFC.get(stringConversion(new MNKCell(d.i + 1, d.j+1)));
+                    if (c!=null){
+                        c.decreaseCount();
+                        if (c.getCount()==0) delete(c);
                     }
                 }
             }
             if (B.cellState(d.i + 1, d.j) == MNKCellState.FREE) {       //basso
-                MNKCell tmp = new MNKCell(d.i + 1, d.j);
-                if (contains(tmp)) {
-                    NFC[stringConversion(tmp)].decreaseCount();
-                    if (NFC[stringConversion(tmp)].getCount() == 0)
-                        delete(tmp);
+                NFCell c = NFC.get(stringConversion(new MNKCell(d.i + 1, d.j)));
+                if (c!=null){
+                    c.decreaseCount();
+                    if (c.getCount()==0) delete(c);
                 }
             }
         }
         if (d.j<B.N-1) {
             if (B.cellState(d.i, d.j + 1) == MNKCellState.FREE) {       //dx
-                MNKCell tmp = new MNKCell(d.i, d.j + 1);
-                if (contains(tmp)) {
-                    NFC[stringConversion(tmp)].decreaseCount();
-                    if (NFC[stringConversion(tmp)].getCount() == 0)
-                        delete(tmp);
+                NFCell c = NFC.get(stringConversion(new MNKCell(d.i, d.j+1)));
+                if (c!=null){
+                    c.decreaseCount();
+                    if (c.getCount()==0) delete(c);
                 }
             }
         }
         if (d.j>0){
             if (B.cellState(d.i, d.j - 1) == MNKCellState.FREE) {       //sx
-                MNKCell tmp = new MNKCell(d.i, d.j - 1);
-                if (contains(tmp)) {
-                    NFC[stringConversion(tmp)].decreaseCount();
-                    if (NFC[stringConversion(tmp)].getCount() == 0)
-                        delete(tmp);
+                NFCell c = NFC.get(stringConversion(new MNKCell(d.i, d.j-1)));
+                if (c!=null){
+                    c.decreaseCount();
+                    if (c.getCount()==0) delete(c);
                 }
             }
         }
@@ -264,4 +239,9 @@ public class ArrayNFC{
         System.out.println("------");
     }
 
+    public void print(){
+        System.out.println("hashNFC: "+NFC);
+    }
+
 }
+
