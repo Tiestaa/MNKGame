@@ -5,14 +5,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 
-public class ArrayNFC{
+public class HashMapNFC{
     private final HashMap<Integer,NFCell> NFC;
 
-    public ArrayNFC(int M,int N){
+    public HashMapNFC(int M,int N){
         String totaln = Integer.toString(M-1);
         String totalm = Integer.toString(N-1);
         String totalmn = totaln + totalm;
-        NFC = new HashMap<Integer,NFCell>();        //inserire dimensinoe minima attraverso totalmn
+        NFC = new HashMap<Integer,NFCell>( (int)(Integer.parseInt(totalmn)*1.25));        //inserire dimensinoe minima attraverso totalmn
     }
 
     private int stringConversion(MNKCell d){
@@ -208,7 +208,7 @@ public class ArrayNFC{
     public void stampArray(NFCell[] NFC){
         System.out.println("celle in NFC:");
         for(NFCell d : NFC){
-            if( contains(d) ) System.out.println(d.i+"-"+d.j+" value: "+ d.getValuation());
+            if( contains(d) ) System.out.println(d.i+"-"+d.j+" count: "+ d.getCount()+"\tsize: "+NFC.length);
         }
     }
     public void StampGame(MNKCell[] MC, MNKBoard B) {
@@ -241,6 +241,32 @@ public class ArrayNFC{
 
     public void print(){
         System.out.println("hashNFC: "+NFC);
+    }
+
+    public static void main(String[] args){
+        MNKBoard B=new MNKBoard(6 ,6 ,6 );
+        HashMapNFC test = new HashMapNFC(6,6);
+        B.markCell(3,3);
+        test.fillNFCplus(new MNKCell(3,3), B);
+        test.StampGame(B.getMarkedCells(), B);
+        test.stampArray(test.getArray());
+
+        B.markCell(2,2);
+        test.fillNFCplus(new MNKCell(2,2), B);
+        test.StampGame(B.getMarkedCells(), B);
+        test.stampArray(test.getArray());
+
+        B.unmarkCell();
+
+        test.deleteNFCplus(new MNKCell(2,2), B);
+        test.StampGame(B.getMarkedCells(), B);
+        test.stampArray(test.getArray());
+
+        B.unmarkCell();
+        test.deleteNFCplus(new MNKCell(3,3), B);
+        test.StampGame(B.getMarkedCells(), B);
+        test.stampArray(test.getArray());
+
     }
 
 }

@@ -551,11 +551,11 @@ public class Heuristic {
         int MinPlayerValue=0;
 
         if (B.gameState()==MNKGameState.WINP1) {
-            return Integer.MAX_VALUE;
+            return 10000000;
         }
 
         else if (B.gameState()==MNKGameState.WINP2) {
-            return Integer.MIN_VALUE;
+            return -10000000;
         }
         else if (B.gameState()==MNKGameState.DRAW) {
             return 0;
@@ -592,8 +592,8 @@ public class Heuristic {
                 else MinPlayerValue = MinPlayerValue - valuation;
         }
 
-        CurrPlayer = CurrPlayer * 100;
-        OppPlayer = OppPlayer * 100; 
+        CurrPlayer = CurrPlayer * 200;
+        OppPlayer = OppPlayer * 200; 
 
         hor.clear(); ver.clear(); diag.clear(); antidiag.clear();
 
@@ -615,7 +615,6 @@ public class Heuristic {
         return toReturn;
         */
 
-        int toReturn = MaxPlayerValue+MinPlayerValue + (CurrPlayer-OppPlayer);
-        return toReturn;
+        return MaxPlayerValue+MinPlayerValue + (CurrPlayer-OppPlayer);
     }
 }
