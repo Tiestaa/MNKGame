@@ -8,55 +8,39 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
     private int TIMEOUT;
     double TimeLimit;
     long TimeStart;
-    boolean TimeFinish;     //vede quando un for è finito e dunque può cambiare la bestcell
+    boolean TimeFinish; 
     private boolean First;
     private Heuristic Euristica;
     private MNKCell BestIterativeCell;
     private MNKCell NewBestCell;
-    private boolean BigSize;
     private int DepthCount;
     private ArrayNFC NFC;
     private long bucketKey;
-
-    //DEBUG
-    private double TimeInFill;
-    private long time;
-    private int NewBestValue;
-    private boolean presodaTT;
-    private int visitedNode;
-    int cacheHit;
-    private boolean Break;
-
-
+    private boolean Final;
     private TransTable TT;
 
     public ATTPlayerDEFFNFC(){}
 
     public void initPlayer(int M, int N, int K, boolean first, int timeout_in_secs) {
-        visitedNode=0;
         B = new MNKBoard(M, N, K);
         myWin = first ? MNKGameState.WINP1 : MNKGameState.WINP2;
         yourWin = first ? MNKGameState.WINP2 : MNKGameState.WINP1;
         First = first;
         TIMEOUT = timeout_in_secs;
-        BigSize = M > 40 || N > 40;
         TimeLimit = 100. - 0.24;
         TimeFinish=false;
         Euristica=new Heuristic();
         TT=new TransTable(M,N);
         bucketKey = 0;
-
         NFC = new ArrayNFC(M,N);
-        cacheHit++;
+        Final=false;
     }
 
     private void IterativeDeepening(boolean MaxplayerA, int maxdepth) {
-        visitedNode = 0;
         int alpha = Integer.MIN_VALUE;       //minvalue
         int beta = Integer.MAX_VALUE;     //maxvalue
         int bestvalue = MaxplayerA ? Integer.MIN_VALUE : Integer.MAX_VALUE;
         int value = 0;
-        NewBestValue = 0;
 
         for (DepthCount = 1; DepthCount <= maxdepth; DepthCount++) {
             BestIterativeCell = null;
@@ -66,12 +50,13 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
             bestvalue = MaxplayerA ? Integer.MIN_VALUE : Integer.MAX_VALUE;
 
             for (MNKCell d : NFC.getArray()) {
-                if (NFC.contains(d)) {
-                    if ((System.currentTimeMillis() - TimeStart) / 1000.0 > TIMEOUT * (TimeLimit / 100.0)) {
-                        TimeFinish = true;
-                        break;
-                    }
 
+                if ((System.currentTimeMillis() - TimeStart) / 1000.0 > TIMEOUT * (TimeLimit / 100.0)) {
+                    TimeFinish = true;
+                    break;
+                }
+
+                if (NFC.contains(d)) {          //NFC contains all cells but are set to NULL, so contains check if this cell is !=NULL
                     B.markCell(d.i, d.j);
                     TT.getKeys(B,d);
                     NFC.fillNFCplus(d, B);
@@ -100,12 +85,10 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
             }
             boolean NoUpdate = Math.abs(bestvalue) == Integer.MAX_VALUE;
             if (NoUpdate && DepthCount==1) return;      //se ad altezza 1 non ci sono soluzioni in cui si evita la sconfitta si ritorna subito
-            if ((!TimeFinish || DepthCount == 1 || (BigSize && DepthCount == 1 )) && !NoUpdate) {       //MODIFICATO
-                NewBestValue = bestvalue;
+            if ((!TimeFinish || DepthCount == 1 ) && !NoUpdate) {       //MODIFICATO
                 NewBestCell = BestIterativeCell;   //se non finisce di ispezionare tutta l'altezza riporta la bestcell trovata prima
             }
         }
-        System.out.println("bestvalue: "+ bestvalue);
     }
 
 
@@ -115,9 +98,10 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
 
         if ((System.currentTimeMillis() - TimeStart) / 1000.0 > TIMEOUT * (TimeLimit / 100.0)){    
             TimeFinish=true;
+            return value;
         }
          
-        boolean Final = false;
+        Final = false;
         int AlphaOrig = alpha;
         DataHash TTData = TT.is_in_TT();
         if (TTData != null) {
@@ -219,16 +203,12 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
     public MNKCell selectCell(MNKCell[] FC, MNKCell[] MC){
         TimeStart =System.currentTimeMillis();
         TimeFinish=false;
-        Break=false;
-        TimeInFill=0;
 
         if(MC.length > 0) {
             MNKCell c = new MNKCell(MC[MC.length - 1].i, MC[MC.length - 1].j, First ? MNKCellState.P2 : MNKCellState.P1);
             B.markCell(c.i,c.j); //mark the last move
             TT.getKeys(B,c);
             NFC.fillNFCplus(c,B);
-                //debug
-            TT.StampGame(B.getMarkedCells(), B);
         }
 
         if (MC.length==0 && First){
@@ -286,36 +266,12 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
         NewBestCell = FC[0];
 
         IterativeDeepening(MaxPlayerA,(B.M*B.N)-MC.length);
-        /*
-        if (BigSize && DepthCount<=2) {
-            NFCell[] Arr = NFC.getValidArray();
-            for (NFCell d : Arr) {
-                B.markCell(d.i, d.j);
-                d.setValuation(Euristica.evaluate(B));
-                B.unmarkCell();
-            }
-
-            if (First) {
-                Arrays.sort(Arr, Collections.reverseOrder());
-            } else {
-                Arrays.sort(Arr);
-            }
-
-            B.markCell(Arr[0].i,Arr[0].j);
-            NFC.fillNFCplus(Arr[0],B);
-            TT.clear();
-            return Arr[0];
-        }
-        */
 
         B.markCell(NewBestCell.i,NewBestCell.j);
         TT.getKeys(B,NewBestCell);
         NFC.fillNFCplus(NewBestCell,B);
 
         TT.clear();
-
-            //debug
-        TT.StampGame(B.getMarkedCells(), B);
 
         return NewBestCell;
     }
