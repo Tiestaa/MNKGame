@@ -10,8 +10,8 @@ public class TransTable {
     private Map<Long, DataHash> tt;                            // Tabella Hash
     private long[][] XplayerVal, OplayerVal;                   // matrice principale con i valori casuali
     private long[][] Rt_XplayerVal, Rt_OplayerVal;             // matrice 
-    private long Zobby, spec_Zobby, bot_Zobby, bot_Spec_Zobby; //keys
-    private long rtZobby, rtspec_Zobby, rtbot_Zobby, rtbot_Spec_Zobby;
+    private long Zobby, spec_Zobby, bot_Zobby, bot_Spec_Zobby;          //keys
+    private long rtZobby, rtspec_Zobby, rtbot_Zobby, rtbot_Spec_Zobby;  //keys ruotate
 
     public TransTable(int M, int N) {
         this.M = M;
@@ -82,43 +82,45 @@ public class TransTable {
         System.out.println("------");
     }
 
-    public void getMainKey(MNKBoard B,MNKCell current_cell){
-        generateKey(XplayerVal,OplayerVal,B,current_cell);
+    public void getKeys(MNKBoard B,MNKCell current_cell){
+        generateKey(current_cell);
     }
 
-    public void generateKey(long[][] Xlist, long[][] Olist, MNKBoard ZB,MNKCell current_cell){
+    public void generateKey(MNKCell current_cell){
 
-        int n = ZB.N - 1, m = ZB.M - 1;
+        int n = N - 1, m = M - 1;
 
             if (current_cell.state == MNKCellState.P1){            // X turn - xor
-                Zobby ^= Xlist[current_cell.i][current_cell.j];
-                spec_Zobby ^= Xlist[current_cell.i][n - current_cell.j];
-                bot_Zobby ^= Xlist[m - current_cell.i][current_cell.j];
-                bot_Spec_Zobby ^= Xlist[m - current_cell.i][n - current_cell.j];
-
-                rtZobby ^= Xlist[current_cell.i][current_cell.j];
-                rtspec_Zobby ^= Xlist[current_cell.i][n - current_cell.j];
-                rtbot_Zobby ^= Xlist[m - current_cell.i][current_cell.j];
-                rtbot_Spec_Zobby ^= Xlist[m - current_cell.i][n - current_cell.j];
+                Zobby ^= XplayerVal[current_cell.i][current_cell.j];
+                spec_Zobby ^= XplayerVal[current_cell.i][n - current_cell.j];
+                bot_Zobby ^= XplayerVal[m - current_cell.i][current_cell.j];
+                bot_Spec_Zobby ^= XplayerVal[m - current_cell.i][n - current_cell.j];
+            if(M==N){
+                rtZobby ^= Rt_XplayerVal[current_cell.i][current_cell.j];
+                rtspec_Zobby ^= Rt_XplayerVal[current_cell.i][n - current_cell.j];
+                rtbot_Zobby ^= Rt_XplayerVal[m - current_cell.i][current_cell.j];
+                rtbot_Spec_Zobby ^= Rt_XplayerVal[m - current_cell.i][n - current_cell.j];
+            }
             }
 
             else{
-                Zobby ^= Olist[current_cell.i][current_cell.j];
-                spec_Zobby ^= Olist[current_cell.i][n - current_cell.j];
-                bot_Zobby ^= Olist[m - current_cell.i][current_cell.j];
-                bot_Spec_Zobby ^= Olist[m - current_cell.i][n - current_cell.j];
-
-                rtZobby ^= Olist[current_cell.i][current_cell.j];
-                rtspec_Zobby ^= Olist[current_cell.i][n - current_cell.j];
-                rtbot_Zobby ^= Olist[m - current_cell.i][current_cell.j];
-                rtbot_Spec_Zobby ^= Olist[m - current_cell.i][n - current_cell.j];
+                Zobby ^= OplayerVal[current_cell.i][current_cell.j];
+                spec_Zobby ^= OplayerVal[current_cell.i][n - current_cell.j];
+                bot_Zobby ^= OplayerVal[m - current_cell.i][current_cell.j];
+                bot_Spec_Zobby ^= OplayerVal[m - current_cell.i][n - current_cell.j];
+            
+            if(M==N){
+                rtZobby ^= Rt_OplayerVal[current_cell.i][current_cell.j];
+                rtspec_Zobby ^= Rt_OplayerVal[current_cell.i][n - current_cell.j];
+                rtbot_Zobby ^= Rt_OplayerVal[m - current_cell.i][current_cell.j];
+                rtbot_Spec_Zobby ^= Rt_OplayerVal[m - current_cell.i][n - current_cell.j];
+            }
             }
 
         
     }
 
     
-
     // funzione per il salvataggio di un valore all'interno della Transposition
     public boolean storeData(long Zobby, int alpha, int beta,int value, int depth){
         /*
@@ -138,35 +140,47 @@ public class TransTable {
         return true;
     }
 
-    public DataHash containsData(long Zobby,long botzobby, long botspeczobby, long speczobby){
-        DataHash ttData = tt.get(Zobby);
+    public DataHash containsData(long Z,long bZ, long bsZ, long sZ){
+        DataHash ttData = tt.get(Z);
         if(ttData == null){
-            ttData = tt.get(botzobby);
+            ttData = tt.get(bZ);
             if(ttData == null){
-                ttData = tt.get(botspeczobby);
+                ttData = tt.get(bsZ);
                 if(ttData == null)
-                    ttData = tt.get(speczobby);
+                    ttData = tt.get(sZ);
             }
         }
         return ttData;
     }
+
+    public DataHash is_in_TT(){
+        DataHash found = containsData(Zobby, spec_Zobby, bot_Zobby, bot_Spec_Zobby);
+        if(M == N && found == null){
+            found = containsData(rtZobby, rtspec_Zobby, rtbot_Zobby, rtbot_Spec_Zobby);
+        }
+        return found;
+    }
+
+
+
     public void clear (){
         tt.clear();
     }
 
     public long rtgetZobby(){
-        return Zobby;
+        return rtZobby;
     }
     public long rtgetBot_Zobby(){
-        return bot_Zobby;
+        return rtbot_Zobby;
     }
     public long rtgetBot_Spec_Zobby(){
-        return bot_Spec_Zobby;
+        return rtbot_Spec_Zobby;
     }
 
     public long rtgetSpec_Zobby(){
-        return spec_Zobby;
+        return rtspec_Zobby;
     }
+
     public long getZobby(){
         return Zobby;
     }

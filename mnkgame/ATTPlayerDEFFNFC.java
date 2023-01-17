@@ -71,7 +71,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
                     }
 
                     B.markCell(d.i, d.j);
-                    TT.getMainKey(B,d);
+                    TT.getKeys(B,d);
                     NFC.fillNFCplus(d, B);
 
                     if (!TimeFinish) {
@@ -85,7 +85,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
                     }
 
                     B.unmarkCell();
-                    TT.getMainKey(B,d);
+                    TT.getKeys(B,d);
                     
                     NFC.deleteNFCplus(d, B);
 
@@ -111,12 +111,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
         boolean Final = false;
         int AlphaOrig = alpha;
         
-        
-        DataHash TTData = TT.containsData(TT.getZobby(), TT.getBot_Zobby(), TT.getBot_Spec_Zobby(), TT.getSpec_Zobby());
-        if (B.M == B.N) {
-            if (TTData == null)
-                TTData = TT.containsData(TT.rtgetZobby(), TT.rtgetBot_Zobby(), TT.rtgetBot_Spec_Zobby(), TT.rtgetSpec_Zobby());
-        }
+        DataHash TTData = TT.is_in_TT();
         if (TTData != null) {
             if (TTData.getDepth() >= depth) {
                 int valuation = TTData.getValuation();
@@ -147,14 +142,14 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
                 for (MNKCell child : NFC.getArray()) {
                     if (NFC.contains(child)) {
                         B.markCell(child.i, child.j);
-                        TT.getMainKey(B,child);
+                        TT.getKeys(B,child);
                         NFC.fillNFCplus(child, B);
 
                         value = Math.max(value, AlphaBeta(depth - 1, alpha, beta, false, child));
                         alpha = Math.max(value, alpha);
 
                         B.unmarkCell();
-                        TT.getMainKey(B, child);
+                        TT.getKeys(B, child);
                     
                         NFC.deleteNFCplus(child, B);
 
@@ -168,14 +163,14 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
                 for (MNKCell child : NFC.getArray()) {
                     if (NFC.contains(child)) {
                         B.markCell(child.i, child.j);
-                        TT.getMainKey(B,child);
+                        TT.getKeys(B,child);
                         NFC.fillNFCplus(child, B);
 
                         value = Math.min(value, AlphaBeta(depth - 1, alpha, beta, true,child));
                         beta = Math.min(value, beta);
 
                         B.unmarkCell();
-                        TT.getMainKey(B, child);
+                        TT.getKeys(B, child);
                         NFC.deleteNFCplus(child, B);
 
                         if (beta <= alpha)
@@ -187,7 +182,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
 
 
         if (!TimeFinish) {
-            TT.getMainKey(B,currentCell);
+            TT.getKeys(B,currentCell);
             TT.storeData(TT.getZobby(), AlphaOrig, beta, value, depth);
         }
         return value;
@@ -223,7 +218,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
         if(MC.length > 0) {
             MNKCell c = new MNKCell(MC[MC.length - 1].i, MC[MC.length - 1].j, First ? MNKCellState.P2 : MNKCellState.P1);
             B.markCell(c.i,c.j); //mark the last move
-            TT.getMainKey(B,c);
+            TT.getKeys(B,c);
             NFC.fillNFCplus(c,B);
         }
 
@@ -231,13 +226,13 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
             if (B.M==3 && B.N==3){
                 MNKCell c = new MNKCell(2,0);
                 B.markCell(c.i,c.j);
-                TT.getMainKey(B,c);
+                TT.getKeys(B,c);
                 NFC.fillNFCplus(c,B);
                 return c;
             }
             MNKCell c=new MNKCell((int)Math.floor(B.M/2.), (int)Math.floor(B.N/2.), MNKCellState.P1);
             B.markCell(c.i,c.j);
-            TT.getMainKey(B,c);
+            TT.getKeys(B,c);
             NFC.fillNFCplus(c,B);
             return c;
         }
@@ -248,7 +243,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
                 c = new MNKCell(c.i+1,c.j+1);
             }
             B.markCell(c.i,c.j);
-            TT.getMainKey(B,c);
+            TT.getKeys(B,c);
             NFC.fillNFCplus(c,B);
             return c;
         }
@@ -268,7 +263,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
                 c=new MNKCell(c.i-1,c.j-1);
             }
             B.markCell(c.i,c.j);
-            TT.getMainKey(B,c);
+            TT.getKeys(B,c);
             NFC.fillNFCplus(c,B);
             return c;
         }
@@ -305,7 +300,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
         */
 
         B.markCell(NewBestCell.i,NewBestCell.j);
-        TT.getMainKey(B,NewBestCell);
+        TT.getKeys(B,NewBestCell);
         NFC.fillNFCplus(NewBestCell,B);
 
         TT.clear();
