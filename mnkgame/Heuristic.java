@@ -134,13 +134,15 @@ public class Heuristic {
         switch (mode){
             case ('A'):
             
-                border1 = start.i - 1 >= 0 && start.j+1 < B.N; border2 = arrive.j-1 >= 0;
+                border1 = start.i - 1 >= 0 && start.j+1 < B.N; 
+                border2 = arrive.i + 1 < B.M && arrive.j-1 >=0;
                 x = start.i-1; y = start.j+1;
                 w = arrive.i+1; z = arrive.j-1;
                 break;
             
             case ('D'):
-                border1 = start.i - 1 >= 0 && start.j-1 >= 0; border2 = arrive.j+1 < B.N;
+                border1 = start.i - 1 >= 0 && start.j-1 >= 0; 
+                border2 = arrive.i + 1 < B.M && arrive.j+1 <B.N;
                 x = start.i-1; y = start.j-1;
                 w = arrive.i+1; z = arrive.j+1;
                 break;
@@ -165,8 +167,6 @@ public class Heuristic {
 
         if (border2 && B.B[w][z] == MNKCellState.FREE)
             hole++;
-
-            System.out.println("PORCODIO");
         return hole;
     }
 
@@ -216,7 +216,6 @@ public class Heuristic {
                 x = i - k; y = j + k;  
                 xs = i+k; ys = j - k; 
                 cond0 = i-k >= 0 && j+k < B.N;
-                System.out.println("PORCODIO");
                 cond1 = i-k-1 >=0 && j+k+1 < B.N && B.B[i-k-1][j+k+1] == c.state;
                 cond2 = i+k <B.M && j-k >= 0; 
                 cond3 = i+k+1 < B.M && j-k-1>=0 && B.B[i+k+1][j-k-1] == c.state;
