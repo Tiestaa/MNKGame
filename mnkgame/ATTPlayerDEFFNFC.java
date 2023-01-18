@@ -52,10 +52,12 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
 
             for (MNKCell d : NFC.getArray()) {
 
+
                 if ((System.currentTimeMillis() - TimeStart) / 1000.0 > TIMEOUT * (TimeLimit / 100.0)) {
                     TimeFinish = true;
                     break;
                 }
+
                 B.markCell(d.i, d.j);
                 TT.getKeys(B,d);
                 NFC.fillNFCplus(d, B);
@@ -69,22 +71,29 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
                         bestvalue = bestMove(bestvalue, value, false, d);
                     }
                 }
-
+                
                 B.unmarkCell();
                 TT.getKeys(B,d);
                 NFC.deleteNFCplus(d, B);
 
+                if (TimeFinish) break;
+
                 //cutoff manuali
+                
                 if ((First && bestvalue == 10000000) || (!First && bestvalue == -10000000)) {
                     NewBestCell = BestIterativeCell;
                     return;
                 }
+                
+                //System.out.println("cella : "+ d.i +"-"+d.j+"\t\tvalue: "+ value+"\t\tbestvalue: "+ bestvalue+"\t\taltezza: "+ DepthCount);
             }
             
-            //boolean NoUpdate = Math.abs(bestvalue) == Integer.MAX_VALUE;
+            boolean NoUpdate = Math.abs(bestvalue) == 10000000;
             //if (NoUpdate && DepthCount==1) return;      //se ad altezza 1 non ci sono soluzioni in cui si evita la sconfitta si ritorna subito
-            if (!TimeFinish || DepthCount == 1){       //MODIFICATO
+            if ((!TimeFinish || DepthCount == 1) && !NoUpdate ){       //MODIFICATO
+                //System.out.println("Cambio la cella "+ NewBestCell.i+"-"+NewBestCell.j+" con la cella "+ BestIterativeCell.i+"-"+BestIterativeCell.j);
                 NewBestCell = BestIterativeCell;   //se non finisce di ispezionare tutta l'altezza riporta la bestcell trovata prima
+
             }
         
         }
@@ -132,6 +141,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
             if (MaxPlayerA) {
                 value = Integer.MIN_VALUE;
                 for (MNKCell child : NFC.getArray()) {
+                    if (TimeFinish) break;
                     B.markCell(child.i, child.j);
                     TT.getKeys(B,child);
                     NFC.fillNFCplus(child, B);
@@ -152,6 +162,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
             } else {
                 value = Integer.MAX_VALUE;
                 for (MNKCell child : NFC.getArray()) {
+                    if (TimeFinish) break;
                     B.markCell(child.i, child.j);
                     TT.getKeys(B,child);
                     NFC.fillNFCplus(child, B);
@@ -202,6 +213,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
         TimeFinish=false;
 
         if(MC.length > 0) {
+            TT.clear();     
             MNKCell c = new MNKCell(MC[MC.length - 1].i, MC[MC.length - 1].j, First ? MNKCellState.P2 : MNKCellState.P1);
             B.markCell(c.i,c.j); //mark the last move
             TT.getKeys(B,c);
@@ -222,7 +234,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
             NFC.fillNFCplus(c,B);
             return c;
         }
-
+            
         if (MC.length==1 && !First && !(B.M==3 && B.N==3)){
             MNKCell c=new MNKCell((int)Math.floor(B.M/2.), (int)Math.floor(B.N/2.));
             if (B.B[c.i][c.j]!=MNKCellState.FREE && B.B[c.i+1][c.j+1]==MNKCellState.FREE){
@@ -233,6 +245,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
             NFC.fillNFCplus(c,B);
             return c;
         }
+        
 
         if (MC.length==2 && First && !(B.M==3 && B.N==3)){
             MNKCell c=new MNKCell((int)Math.floor(B.M/2.), (int)Math.floor(B.N/2.));
@@ -261,15 +274,14 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
         boolean MaxPlayerA = B.currentPlayer() == 0;  // Am I the starting player ? (PlayerA)
 
         NewBestCell = FC[0];
-
+        
+        System.out.println("tempo prima di IT: "+ ((System.currentTimeMillis() - TimeStart)/1000.));
         IterativeDeepening(MaxPlayerA,(B.M*B.N)-MC.length);
+        System.out.println("tempo dopo di IT: "+ ((System.currentTimeMillis() - TimeStart)/1000.)+"\n");
 
         B.markCell(NewBestCell.i,NewBestCell.j);
         TT.getKeys(B,NewBestCell);
         NFC.fillNFCplus(NewBestCell,B);
-
-        TT.clear();
-
         return NewBestCell;
     }
 
