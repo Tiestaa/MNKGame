@@ -592,8 +592,8 @@ public class Heuristic {
                 else MinPlayerValue = MinPlayerValue - valuation;
         }
 
-        CurrPlayer = CurrPlayer * 200;
-        OppPlayer = OppPlayer * 200; 
+        CurrPlayer = CurrPlayer * 150;
+        OppPlayer = OppPlayer * 150; 
 
         hor.clear(); ver.clear(); diag.clear(); antidiag.clear();
 
