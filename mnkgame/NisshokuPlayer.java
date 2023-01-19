@@ -1,4 +1,5 @@
 package mnkgame;
+
 import java.util.*;
 
 public class NisshokuPlayer implements MNKPlayer{
