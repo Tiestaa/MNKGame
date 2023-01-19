@@ -604,25 +604,7 @@ public class Heuristic {
         OppPlayer = OppPlayer * 150; 
 
         hor.clear(); ver.clear(); diag.clear(); antidiag.clear();
-
-        /* 
-        if (CurrPlayer==0 && OppPlayer==0){
-            for (MNKCell c : MARKED){
-                valuation= check(c,B);
-                if (c.state == MNKCellState.P1) MaxPlayerValue = MaxPlayerValue +  valuation;
-                else MinPlayerValue = MinPlayerValue - valuation;
-            }
-        }
         
-
-
-
-        int toReturn = 0;
-        if (CurrPlayer!=0 && OppPlayer!=0) toReturn = (CurrPlayer-OppPlayer);
-        else toReturn = (MaxPlayerValue+MinPlayerValue);
-        return toReturn;
-        */
-
         return (MaxPlayerValue+MinPlayerValue + (CurrPlayer-OppPlayer));
     }
 }

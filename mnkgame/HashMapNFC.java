@@ -16,13 +16,10 @@ public class HashMapNFC{
     }
 
     private int stringConversion(MNKCell d){
-        if(d != null){
-            String istring = Integer.toString(d.i);
-            String jstring = Integer.toString(d.j);
-            String K = istring + jstring;
-            return Integer.parseInt(K);
-        }
-        return -1;
+        String istring = Integer.toString(d.i);
+        String jstring = Integer.toString(d.j);
+        String K = istring + jstring;
+        return Integer.parseInt(K);
     }
 
     public boolean contains(MNKCell d){
@@ -204,70 +201,5 @@ public class HashMapNFC{
         }
        if(numberNFC(d, B)!=0) add(d, numberNFC(d, B));
     }
-
-    public void stampArray(NFCell[] NFC){
-        System.out.println("celle in NFC:");
-        for(NFCell d : NFC){
-            if( contains(d) ) System.out.println(d.i+"-"+d.j+" count: "+ d.getCount()+"\tsize: "+NFC.length);
-        }
-    }
-    public void StampGame(MNKCell[] MC, MNKBoard B) {
-        MNKCell c1, c2;
-        boolean found = false;
-        for (int i = 0; i < B.M; i++) {
-            for (int j = 0; j < B.N; j++) {
-                c1 = new MNKCell(i, j, MNKCellState.P1);
-                c2 = new MNKCell(i, j, MNKCellState.P2);
-                for (MNKCell M : MC) {
-                    if (M.i == c1.i && M.j == c1.j && M.state == c1.state) {
-                        System.out.print("X ");
-                        found = true;
-                        break;
-                    } else if (M.i == c1.i && M.j == c1.j && M.state == c2.state) {
-                        System.out.print("O ");
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    System.out.print("_ ");
-                }
-                found = false;
-            }
-            System.out.print("\n");
-        }
-        System.out.println("------");
-    }
-
-    public void print(){
-        System.out.println("hashNFC: "+NFC);
-    }
-
-    public static void main(String[] args){
-        MNKBoard B=new MNKBoard(6 ,6 ,6 );
-        HashMapNFC test = new HashMapNFC(6,6);
-        B.markCell(3,3);
-        test.fillNFCplus(new MNKCell(3,3), B);
-        test.StampGame(B.getMarkedCells(), B);
-        test.stampArray(test.getArray());
-
-        B.markCell(2,2);
-        test.fillNFCplus(new MNKCell(2,2), B);
-        test.StampGame(B.getMarkedCells(), B);
-        test.stampArray(test.getArray());
-
-        B.unmarkCell();
-
-        test.deleteNFCplus(new MNKCell(2,2), B);
-        test.StampGame(B.getMarkedCells(), B);
-        test.stampArray(test.getArray());
-
-        B.unmarkCell();
-        test.deleteNFCplus(new MNKCell(3,3), B);
-        test.StampGame(B.getMarkedCells(), B);
-        test.stampArray(test.getArray());
-
-    }
-
 }
 

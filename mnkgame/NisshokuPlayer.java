@@ -1,7 +1,7 @@
 package mnkgame;
 import java.util.*;
 
-public class ATTPlayerDEFFNFC implements MNKPlayer{
+public class NisshokuPlayer implements MNKPlayer{
     private MNKBoard B;
     private MNKGameState myWin;
     private MNKGameState yourWin;
@@ -10,16 +10,16 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
     long TimeStart;
     boolean TimeFinish; 
     private boolean First;
-    private Heuristic Euristica;
     private MNKCell BestIterativeCell;
     private MNKCell NewBestCell;
     private int DepthCount;
-    private HashMapNFC NFC;
-    private long bucketKey;
     private boolean Final;
     private TransTable TT;
+    private long bucketKey;
+    private Heuristic Euristica;
+    private HashMapNFC NFC;
 
-    public ATTPlayerDEFFNFC(){}
+    public NisshokuPlayer(){}
 
     public void initPlayer(int M, int N, int K, boolean first, int timeout_in_secs) {
         B = new MNKBoard(M, N, K);
@@ -67,7 +67,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
                 }
 
                 B.markCell(d.i, d.j);
-                TT.updateKeys(B,d);
+                TT.updateKeys(B,d);         
                 NFC.fillNFCplus(d, B);
 
                 if (!TimeFinish) {
@@ -91,21 +91,14 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
                     NewBestCell = BestIterativeCell;
                     return;
                 }
-                
-                
-                
-                
-                
-                //System.out.println("cella : "+ d.i +"-"+d.j+"\t\tvalue: "+ value +"\t\tbestvalue: "+ bestvalue+"\t\taltezza: "+ DepthCount);
             }
             
-            boolean Update=true;     //Questo porta in errore, serve modo per rallentare la sconfitta in modo diverso
+            boolean Update=true;  
             if ((First && bestvalue == -10000000)|| (!First && bestvalue == 10000000)){
                 if (DepthCount==1) return;
                 else Update=false;
             } 
             if ((!TimeFinish || DepthCount == 1) && Update){      
-                //System.out.println("Cambio la cella "+ NewBestCell.i+"-"+NewBestCell.j+" con la cella "+ BestIterativeCell.i+"-"+BestIterativeCell.j);
                 NewBestCell = BestIterativeCell;   //se non finisce di ispezionare tutta l'altezza riporta la bestcell trovata prima
 
             }
@@ -126,7 +119,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
         int AlphaOrig = alpha;
             
         DataHash TTData = TT.is_in_TT();
-        /* 
+        
         if (TTData != null) {
             if (TTData.getDepth() >= depth) {
                 int valuation = TTData.getValuation();
@@ -146,7 +139,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
             }
             
         }
-        */
+        
         
         if ((B.gameState() != MNKGameState.OPEN || depth == 0) && !TimeFinish ){
             value = Euristica.evaluate(B);
@@ -198,7 +191,6 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
         }
 
         if (!TimeFinish) TT.storeData(AlphaOrig, beta, value, depth);
-
         return value;
     }
 
@@ -230,12 +222,10 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
             MNKCell c = new MNKCell(MC[MC.length - 1].i, MC[MC.length - 1].j, First ? MNKCellState.P2 : MNKCellState.P1);
             B.markCell(c.i,c.j); //mark the last move
             TT.updateKeys(B,c);
-            //System.out.println("Inizio il turno, marco "+c.i+"-"+c.j+", zobby diventa: "+TT.getZobby());
             NFC.fillNFCplus(c,B);
         }
 
         if (MC.length==0 && First){
-            /* 
             if (B.M==3 && B.N==3){
                 MNKCell c = new MNKCell(1,1);
                 B.markCell(c.i,c.j);
@@ -243,7 +233,6 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
                 NFC.fillNFCplus(c,B);
                 return c;
             }
-            */
             MNKCell c=new MNKCell((int)Math.floor(B.M/2.), (int)Math.floor(B.N/2.), MNKCellState.P1);
             B.markCell(c.i,c.j);
             TT.updateKeys(B,c);
@@ -290,14 +279,10 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
         boolean MaxPlayerA = B.currentPlayer() == 0;  // Am I the starting player ? (PlayerA)
 
         NewBestCell = FC[0];
-        
-        //System.out.println("tempo prima di IT: "+ ((System.currentTimeMillis() - TimeStart)/1000.));
         IterativeDeepening(MaxPlayerA,(B.M*B.N)-MC.length);
-        //System.out.println("tempo dopo di IT: "+ ((System.currentTimeMillis() - TimeStart)/1000.)+"\n");
 
         B.markCell(NewBestCell.i,NewBestCell.j);
         TT.updateKeys(B,NewBestCell);
-        //System.out.println("Ho finito "+NewBestCell.i+"-"+NewBestCell.j+", zobby diventa: "+TT.getZobby());
         NFC.fillNFCplus(NewBestCell,B);
         estimateTime();
         return NewBestCell;
