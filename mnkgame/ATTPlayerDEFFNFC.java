@@ -91,7 +91,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
             }
             
             boolean Update=true;     //Questo porta in errore, serve modo per rallentare la sconfitta in modo diverso
-            if ((First && bestvalue == -10000000)|| (!First && bestvalue == -10000000)){
+            if ((First && bestvalue == -10000000)|| (!First && bestvalue == 10000000)){
                 if (DepthCount==1) return;
                 else Update=false;
             } 
@@ -117,7 +117,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
         int AlphaOrig = alpha;
             
         DataHash TTData = TT.is_in_TT();
-        
+        /* 
         if (TTData != null) {
             if (TTData.getDepth() >= depth) {
                 int valuation = TTData.getValuation();
@@ -135,7 +135,9 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
                     return TTData.getValuation();
                 }
             }
+            
         }
+        */
         
         if ((B.gameState() != MNKGameState.OPEN || depth == 0) && !TimeFinish ){
             value = Euristica.evaluate(B);
@@ -250,6 +252,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
             NFC.fillNFCplus(c,B);
             return c;
         }
+
         
         if (MC.length==2 && First && !(B.M==3 && B.N==3)){
             MNKCell c=new MNKCell((int)Math.floor(B.M/2.), (int)Math.floor(B.N/2.));
