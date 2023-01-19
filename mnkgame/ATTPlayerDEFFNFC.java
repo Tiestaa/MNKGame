@@ -59,7 +59,6 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
 
                 B.markCell(d.i, d.j);
                 TT.getKeys(B,d);
-                //System.out.println("ID\tHo marcato la cella "+d.i+"-"+d.j+", zobby diventa: "+TT.getZobby());
                 NFC.fillNFCplus(d, B);
 
                 if (!TimeFinish) {
@@ -74,26 +73,29 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
                 
                 B.unmarkCell();
                 TT.getKeys(B,d);
-                //System.out.println("ID\tho unmarcato la cella "+d.i+"-"+d.j+", zobby diventa: "+TT.getZobby());
                 NFC.deleteNFCplus(d, B);
 
                 if (TimeFinish) break;
 
                 //cutoff manuali
-                /* 
                 if ((First && bestvalue == 10000000) || (!First && bestvalue == -10000000)) {
                     NewBestCell = BestIterativeCell;
                     return;
                 }
-                */
+                
+                
+                
                 
                 
                 //System.out.println("cella : "+ d.i +"-"+d.j+"\t\tvalue: "+ value +"\t\tbestvalue: "+ bestvalue+"\t\taltezza: "+ DepthCount);
             }
             
-            boolean NoUpdate = Math.abs(bestvalue) == 10000000;
-            //if (NoUpdate && DepthCount==1) return;      //se ad altezza 1 non ci sono soluzioni in cui si evita la sconfitta si ritorna subito
-            if ((!TimeFinish || DepthCount == 1) && !NoUpdate ){       //MODIFICATO
+            boolean Update=true;     //Questo porta in errore, serve modo per rallentare la sconfitta in modo diverso
+            if ((First && bestvalue == -10000000)|| (!First && bestvalue == -10000000)){
+                if (DepthCount==1) return;
+                else Update=false;
+            } 
+            if ((!TimeFinish || DepthCount == 1) && Update){      
                 //System.out.println("Cambio la cella "+ NewBestCell.i+"-"+NewBestCell.j+" con la cella "+ BestIterativeCell.i+"-"+BestIterativeCell.j);
                 NewBestCell = BestIterativeCell;   //se non finisce di ispezionare tutta l'altezza riporta la bestcell trovata prima
 
@@ -113,7 +115,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
         
         Final = false;
         int AlphaOrig = alpha;
-
+            
         DataHash TTData = TT.is_in_TT();
         
         if (TTData != null) {
@@ -147,7 +149,6 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
                     if (TimeFinish) break;
                     B.markCell(child.i, child.j);
                     TT.getKeys(B,child);
-                    //System.out.println("AB\tHo marcato la cella "+child.i+"-"+child.j+", zobby diventa: "+TT.getZobby());
                     NFC.fillNFCplus(child, B);
 
                     value = Math.max(value, AlphaBeta(depth - 1, alpha, beta, false, child));
@@ -155,7 +156,6 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
 
                     B.unmarkCell();
                     TT.getKeys(B, child);
-                    //System.out.println("AB\tho unmarcato la cella "+child.i+"-"+child.j+", zobby diventa: "+TT.getZobby());
                     NFC.deleteNFCplus(child, B);
 
                     if (beta <= alpha)
@@ -168,7 +168,6 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
                 for (MNKCell child : NFC.getArray()) {
                     if (TimeFinish) break;
                     B.markCell(child.i, child.j);
-                    //System.out.println("AB\tHo marcato la cella "+child.i+"-"+child.j+", zobby diventa: "+TT.getZobby());
                     TT.getKeys(B,child);
                     NFC.fillNFCplus(child, B);
 
@@ -177,7 +176,6 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
 
                     B.unmarkCell();
                     TT.getKeys(B, child);
-                    //System.out.println("AB\tho unmarcato la cella "+child.i+"-"+child.j+", zobby diventa: "+TT.getZobby());
                     NFC.deleteNFCplus(child, B);
 
                     if (beta <= alpha)
@@ -188,11 +186,8 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
             }
         }
 
-        if (!TimeFinish) {
-            //TT.getKeys(B,currentCell);
-            //System.out.println("\t\tsono prima di salvare la configurazione in TT "+currentCell.i+"-"+currentCell.j+", zobby è: "+TT.getZobby());
-            TT.storeData(TT.getRightKey(), AlphaOrig, beta, value, depth);
-        }
+        if (!TimeFinish) TT.storeData(AlphaOrig, beta, value, depth);
+
         return value;
     }
 
@@ -229,13 +224,15 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
         }
 
         if (MC.length==0 && First){
+            /* 
             if (B.M==3 && B.N==3){
-                MNKCell c = new MNKCell(2,0);
+                MNKCell c = new MNKCell(1,1);
                 B.markCell(c.i,c.j);
                 TT.getKeys(B,c);
                 NFC.fillNFCplus(c,B);
                 return c;
             }
+            */
             MNKCell c=new MNKCell((int)Math.floor(B.M/2.), (int)Math.floor(B.N/2.), MNKCellState.P1);
             B.markCell(c.i,c.j);
             TT.getKeys(B,c);

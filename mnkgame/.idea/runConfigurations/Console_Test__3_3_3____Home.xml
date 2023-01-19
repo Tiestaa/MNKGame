@@ -4,7 +4,7 @@
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="MAIN_CLASS_NAME" value="mnkgame.MNKPlayerTester" />
     <module name="mnkgame" />
-    <option name="PROGRAM_PARAMETERS" value="4 3 3 mnkgame.ATTPlayerDEFFNFC mnkgame.CompetitivePlayer -r 25" />
+    <option name="PROGRAM_PARAMETERS" value="3 3 3 mnkgame.ATTPlayerDEFFNFC mnkgame.claudio.Claudio -r 25" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/.." />
     <method v="2">
       <option name="Make" enabled="true" />

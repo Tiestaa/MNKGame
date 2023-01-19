@@ -12,7 +12,7 @@ public class TransTable {
     private long[][] Rt_XplayerVal, Rt_OplayerVal;             // matrice 
     private long Zobby, spec_Zobby, bot_Zobby, bot_Spec_Zobby;          //keys
     private long rtZobby, rtspec_Zobby, rtbot_Zobby, rtbot_Spec_Zobby;  //keys ruotate
-    private long ZobbyToReturn;
+    private long ZobriestKey;
 
     public TransTable(int M, int N) {
         this.M = M;
@@ -21,9 +21,9 @@ public class TransTable {
         XplayerVal = new long[M][N]; OplayerVal = new long[M][N];
         Rt_XplayerVal = new long[M][N]; Rt_OplayerVal = new long[M][N];
         Zobby = 0; spec_Zobby = 0; bot_Zobby = 0; bot_Spec_Zobby = 0;
-        //rtZobby = 0; rtspec_Zobby = 0; rtbot_Zobby = 0; rtbot_Spec_Zobby = 0;
+        rtZobby = 0; rtspec_Zobby = 0; rtbot_Zobby = 0; rtbot_Spec_Zobby = 0;
 
-        ZobbyToReturn=0;
+        ZobriestKey =0;
 
         // Riempimento della matrice principale
         for (int i = 0; i < M; i++) {
@@ -34,7 +34,7 @@ public class TransTable {
         }
 
         // Matrice ruotata
-        /* 
+
         if (M == N) {
             for (int i = 0; i < M; i++) {
                 for (int j = 0; j < N; j++) {
@@ -57,7 +57,7 @@ public class TransTable {
                 }
             }
         }
-        */
+
     }
 
     public void StampGame(MNKCell[] MC, MNKBoard B) {
@@ -102,14 +102,12 @@ public class TransTable {
             bot_Zobby ^= XplayerVal[m - current_cell.i][current_cell.j];
             bot_Spec_Zobby ^= XplayerVal[m - current_cell.i][n - current_cell.j];
 
-            /* 
             if(M==N){
                 rtZobby ^= Rt_XplayerVal[current_cell.i][current_cell.j];
                 rtspec_Zobby ^= Rt_XplayerVal[current_cell.i][n - current_cell.j];
                 rtbot_Zobby ^= Rt_XplayerVal[m - current_cell.i][current_cell.j];
                 rtbot_Spec_Zobby ^= Rt_XplayerVal[m - current_cell.i][n - current_cell.j];
             }
-            */
         }
             
         else{
@@ -117,20 +115,20 @@ public class TransTable {
             spec_Zobby ^= OplayerVal[current_cell.i][n - current_cell.j];
             bot_Zobby ^= OplayerVal[m - current_cell.i][current_cell.j];
             bot_Spec_Zobby ^= OplayerVal[m - current_cell.i][n - current_cell.j];
-            /* 
+
             if(M==N){
                 rtZobby ^= Rt_OplayerVal[current_cell.i][current_cell.j];
                 rtspec_Zobby ^= Rt_OplayerVal[current_cell.i][n - current_cell.j];
                 rtbot_Zobby ^= Rt_OplayerVal[m - current_cell.i][current_cell.j];
                 rtbot_Spec_Zobby ^= Rt_OplayerVal[m - current_cell.i][n - current_cell.j];
             }
-            */
+
         }
     }
 
     
     // funzione per il salvataggio di un valore all'interno della Transposition
-    public boolean storeData(long zobriestKey, int alpha, int beta,int value, int depth){
+    public boolean storeData(int alpha, int beta,int value, int depth){
         /*
         DataHash ZobbyKey = tt.get(Zobby);
         if(ZobbyKey != null && ZobbyKey.getDepth() >= depth)
@@ -145,42 +143,44 @@ public class TransTable {
         else
             NewData = new DataHash(depth, value, Flag.EXACT);
 
-        if (tt.containsKey(zobriestKey)){
+        if (tt.containsKey(ZobriestKey)){
             DataHash OldData = tt.get(Zobby);
-            tt.replace(zobriestKey, OldData, NewData);
+            tt.replace(ZobriestKey, OldData, NewData);
         }
-        else tt.put(zobriestKey, NewData);
+        else tt.put(ZobriestKey, NewData);
 
-        /* 
+        /*
         if (tt.replace(Zobby,NewData)==null)
             tt.put(Zobby, NewData);
             */
         return true;
     }
 
-    public DataHash containsData(long Z,long bZ, long bsZ, long sZ){
-        DataHash ttData = tt.get(Z);
-        if(ttData == null){
-            ttData = tt.get(bZ);
-            if(ttData == null){
-                ttData = tt.get(bsZ);
-                if(ttData == null){
-                    ttData = tt.get(sZ);
-                    if (ttData!=null) ZobbyToReturn=sZ;
-                } else ZobbyToReturn=bsZ;
-            } else ZobbyToReturn=bZ;
-        } else ZobbyToReturn=Z;
-        return ttData;
+    public boolean findRightKey(long Z,long bZ, long bsZ, long sZ){
+        if (tt.containsKey(Z)) {
+            ZobriestKey =Z;
+            return true;
+        }
+        if (tt.containsKey(bZ)) {
+            ZobriestKey =Z;
+            return true;
+        }
+        if (tt.containsKey(bsZ)) {
+            ZobriestKey =Z;
+            return true;
+        }
+        if (tt.containsKey(sZ)) {
+            ZobriestKey =Z;
+            return true;
+        }
+        return false;
     }
 
+
     public DataHash is_in_TT(){
-        DataHash found = containsData(Zobby, spec_Zobby, bot_Zobby, bot_Spec_Zobby);
-        /* 
-        if(M == N && found == null){
-            found = containsData(rtZobby, rtspec_Zobby, rtbot_Zobby, rtbot_Spec_Zobby);
-        }
-        */
-        return found;
+        if (findRightKey(Zobby, spec_Zobby, bot_Zobby, bot_Spec_Zobby)) return tt.get(ZobriestKey);
+        else if (M==N && findRightKey(rtZobby, rtspec_Zobby, rtbot_Zobby, rtbot_Spec_Zobby)) return tt.get(ZobriestKey);
+        else return null;
     }
 
 
@@ -204,7 +204,7 @@ public class TransTable {
     }
 
     public long getRightKey(){
-        return ZobbyToReturn;
+        return ZobriestKey;
     }
 
     public long getZobby(){
@@ -220,6 +220,41 @@ public class TransTable {
         return spec_Zobby;
     }
 
+
+    public static void main(String[] args){
+        MNKBoard Btest=new MNKBoard(3,3,3);
+        TransTable TT=new TransTable(3,3);
+
+        System.out.println("Zobby: "+ TT.getZobby()+"\tSpec_Zobby: "+ TT.getSpec_Zobby()+"\tBot_Zobby: "+ TT.getBot_Zobby()+"\tBot_Spec_Zobby: "+ TT.getBot_Spec_Zobby());
+        System.out.println("rtZobby: "+ TT.rtgetZobby()+"\trtSpec_Zobby: "+ TT.rtgetSpec_Zobby()+"\trtBot_Zobby: "+ TT.rtgetBot_Zobby()+"\trtBot_Spec_Zobby: "+ TT.rtgetBot_Spec_Zobby()+"\n");
+
+
+        Btest.markCell(0,0);
+        TT.getKeys(Btest,new MNKCell(0,0));
+        Btest.markCell(0,1);
+        TT.StampGame(Btest.getMarkedCells(),Btest);
+        TT.getKeys(Btest,new MNKCell(0,1));
+        System.out.println("Zobby: "+ TT.getZobby()+"\tSpec_Zobby: "+ TT.getSpec_Zobby()+"\tBot_Zobby: "+ TT.getBot_Zobby()+"\tBot_Spec_Zobby: "+ TT.getBot_Spec_Zobby());
+        System.out.println("rtZobby: "+ TT.rtgetZobby()+"\trtSpec_Zobby: "+ TT.rtgetSpec_Zobby()+"\trtBot_Zobby: "+ TT.rtgetBot_Zobby()+"\trtBot_Spec_Zobby: "+ TT.rtgetBot_Spec_Zobby());
+
+
+
+
+
+        Btest.unmarkCell();
+        Btest.unmarkCell();
+
+
+        Btest.markCell(0,2);
+        TT.getKeys(Btest,new MNKCell(0,2));
+        Btest.markCell(1,2);
+        TT.StampGame(Btest.getMarkedCells(),Btest);
+        TT.getKeys(Btest,new MNKCell(1,2));
+        System.out.println("Zobby: "+ TT.getZobby()+"\tSpec_Zobby: "+ TT.getSpec_Zobby()+"\tBot_Zobby: "+ TT.getBot_Zobby()+"\tBot_Spec_Zobby: "+ TT.getBot_Spec_Zobby());
+        System.out.println("rtZobby: "+ TT.rtgetZobby()+"\trtSpec_Zobby: "+ TT.rtgetSpec_Zobby()+"\trtBot_Zobby: "+ TT.rtgetBot_Zobby()+"\trtBot_Spec_Zobby: "+ TT.rtgetBot_Spec_Zobby());
+        return;
+
+    }
 
 }
 
