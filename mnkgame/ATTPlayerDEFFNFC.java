@@ -36,6 +36,15 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
         Final=false;
     }
 
+    private void estimateTime(){
+        if(TIMEOUT * (TimeLimit / 100.0) - (System.currentTimeMillis() - TimeStart) / 1000.0 <= 0.4 ){
+            TimeLimit = TimeLimit - 0.2;
+        }
+        else if(TIMEOUT * (TimeLimit / 100.0) - (System.currentTimeMillis() - TimeStart) / 1000.0 >= 0.8 && TimeLimit <= 100. - 0.4 ){
+            TimeLimit = TimeLimit + 0.2;
+        }
+    }
+
     private void IterativeDeepening(boolean MaxplayerA, int maxdepth) {
         int alpha = Integer.MIN_VALUE;       //minvalue
         int beta = Integer.MAX_VALUE;     //maxvalue
@@ -287,6 +296,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
         TT.getKeys(B,NewBestCell);
         //System.out.println("Ho finito "+NewBestCell.i+"-"+NewBestCell.j+", zobby diventa: "+TT.getZobby());
         NFC.fillNFCplus(NewBestCell,B);
+        estimateTime();
         return NewBestCell;
     }
 
