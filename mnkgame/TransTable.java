@@ -88,7 +88,7 @@ public class TransTable {
         System.out.println("------");
     }
 
-    public void getKeys(MNKBoard B,MNKCell current_cell){
+    public void updateKeys(MNKBoard B,MNKCell current_cell){
         generateKey(current_cell);
     }
 
@@ -218,42 +218,6 @@ public class TransTable {
     }
     public long getSpec_Zobby(){
         return spec_Zobby;
-    }
-
-
-    public static void main(String[] args){
-        MNKBoard Btest=new MNKBoard(3,3,3);
-        TransTable TT=new TransTable(3,3);
-
-        System.out.println("Zobby: "+ TT.getZobby()+"\tSpec_Zobby: "+ TT.getSpec_Zobby()+"\tBot_Zobby: "+ TT.getBot_Zobby()+"\tBot_Spec_Zobby: "+ TT.getBot_Spec_Zobby());
-        System.out.println("rtZobby: "+ TT.rtgetZobby()+"\trtSpec_Zobby: "+ TT.rtgetSpec_Zobby()+"\trtBot_Zobby: "+ TT.rtgetBot_Zobby()+"\trtBot_Spec_Zobby: "+ TT.rtgetBot_Spec_Zobby()+"\n");
-
-
-        Btest.markCell(0,0);
-        TT.getKeys(Btest,new MNKCell(0,0));
-        Btest.markCell(0,1);
-        TT.StampGame(Btest.getMarkedCells(),Btest);
-        TT.getKeys(Btest,new MNKCell(0,1));
-        System.out.println("Zobby: "+ TT.getZobby()+"\tSpec_Zobby: "+ TT.getSpec_Zobby()+"\tBot_Zobby: "+ TT.getBot_Zobby()+"\tBot_Spec_Zobby: "+ TT.getBot_Spec_Zobby());
-        System.out.println("rtZobby: "+ TT.rtgetZobby()+"\trtSpec_Zobby: "+ TT.rtgetSpec_Zobby()+"\trtBot_Zobby: "+ TT.rtgetBot_Zobby()+"\trtBot_Spec_Zobby: "+ TT.rtgetBot_Spec_Zobby());
-
-
-
-
-
-        Btest.unmarkCell();
-        Btest.unmarkCell();
-
-
-        Btest.markCell(0,2);
-        TT.getKeys(Btest,new MNKCell(0,2));
-        Btest.markCell(1,2);
-        TT.StampGame(Btest.getMarkedCells(),Btest);
-        TT.getKeys(Btest,new MNKCell(1,2));
-        System.out.println("Zobby: "+ TT.getZobby()+"\tSpec_Zobby: "+ TT.getSpec_Zobby()+"\tBot_Zobby: "+ TT.getBot_Zobby()+"\tBot_Spec_Zobby: "+ TT.getBot_Spec_Zobby());
-        System.out.println("rtZobby: "+ TT.rtgetZobby()+"\trtSpec_Zobby: "+ TT.rtgetSpec_Zobby()+"\trtBot_Zobby: "+ TT.rtgetBot_Zobby()+"\trtBot_Spec_Zobby: "+ TT.rtgetBot_Spec_Zobby());
-        return;
-
     }
 
 }

@@ -67,7 +67,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
                 }
 
                 B.markCell(d.i, d.j);
-                TT.getKeys(B,d);
+                TT.updateKeys(B,d);
                 NFC.fillNFCplus(d, B);
 
                 if (!TimeFinish) {
@@ -81,7 +81,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
                 }
                 
                 B.unmarkCell();
-                TT.getKeys(B,d);
+                TT.updateKeys(B,d);
                 NFC.deleteNFCplus(d, B);
 
                 if (TimeFinish) break;
@@ -159,14 +159,14 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
                 for (MNKCell child : NFC.getArray()) {
                     if (TimeFinish) break;
                     B.markCell(child.i, child.j);
-                    TT.getKeys(B,child);
+                    TT.updateKeys(B,child);
                     NFC.fillNFCplus(child, B);
 
                     value = Math.max(value, AlphaBeta(depth - 1, alpha, beta, false, child));
                     alpha = Math.max(value, alpha);
 
                     B.unmarkCell();
-                    TT.getKeys(B, child);
+                    TT.updateKeys(B, child);
                     NFC.deleteNFCplus(child, B);
 
                     if (beta <= alpha)
@@ -179,14 +179,14 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
                 for (MNKCell child : NFC.getArray()) {
                     if (TimeFinish) break;
                     B.markCell(child.i, child.j);
-                    TT.getKeys(B,child);
+                    TT.updateKeys(B,child);
                     NFC.fillNFCplus(child, B);
 
                     value = Math.min(value, AlphaBeta(depth - 1, alpha, beta, true,child));
                     beta = Math.min(value, beta);
 
                     B.unmarkCell();
-                    TT.getKeys(B, child);
+                    TT.updateKeys(B, child);
                     NFC.deleteNFCplus(child, B);
 
                     if (beta <= alpha)
@@ -229,7 +229,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
             TT.clear();     
             MNKCell c = new MNKCell(MC[MC.length - 1].i, MC[MC.length - 1].j, First ? MNKCellState.P2 : MNKCellState.P1);
             B.markCell(c.i,c.j); //mark the last move
-            TT.getKeys(B,c);
+            TT.updateKeys(B,c);
             //System.out.println("Inizio il turno, marco "+c.i+"-"+c.j+", zobby diventa: "+TT.getZobby());
             NFC.fillNFCplus(c,B);
         }
@@ -239,14 +239,14 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
             if (B.M==3 && B.N==3){
                 MNKCell c = new MNKCell(1,1);
                 B.markCell(c.i,c.j);
-                TT.getKeys(B,c);
+                TT.updateKeys(B,c);
                 NFC.fillNFCplus(c,B);
                 return c;
             }
             */
             MNKCell c=new MNKCell((int)Math.floor(B.M/2.), (int)Math.floor(B.N/2.), MNKCellState.P1);
             B.markCell(c.i,c.j);
-            TT.getKeys(B,c);
+            TT.updateKeys(B,c);
             NFC.fillNFCplus(c,B);
             return c;
         }
@@ -257,7 +257,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
                 c = new MNKCell(c.i-1,c.j-1);    
             }
             B.markCell(c.i,c.j);
-            TT.getKeys(B,c);
+            TT.updateKeys(B,c);
             NFC.fillNFCplus(c,B);
             return c;
         }
@@ -278,7 +278,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
                 c=new MNKCell(c.i-1,c.j-1);
             }
             B.markCell(c.i,c.j);
-            TT.getKeys(B,c);
+            TT.updateKeys(B,c);
             NFC.fillNFCplus(c,B);
             return c;
         }
@@ -296,7 +296,7 @@ public class ATTPlayerDEFFNFC implements MNKPlayer{
         //System.out.println("tempo dopo di IT: "+ ((System.currentTimeMillis() - TimeStart)/1000.)+"\n");
 
         B.markCell(NewBestCell.i,NewBestCell.j);
-        TT.getKeys(B,NewBestCell);
+        TT.updateKeys(B,NewBestCell);
         //System.out.println("Ho finito "+NewBestCell.i+"-"+NewBestCell.j+", zobby diventa: "+TT.getZobby());
         NFC.fillNFCplus(NewBestCell,B);
         estimateTime();
