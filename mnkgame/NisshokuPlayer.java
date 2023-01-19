@@ -14,7 +14,7 @@ public class NisshokuPlayer implements MNKPlayer{
     private MNKCell NewBestCell;
     private int DepthCount;
     private boolean Final;
-    private TransTable TT;
+    private TranspositionTable TT;
     private long bucketKey;
     private Heuristic Euristica;
     private HashMapNFC NFC;
@@ -30,7 +30,7 @@ public class NisshokuPlayer implements MNKPlayer{
         TimeLimit = 100. - 0.4;
         TimeFinish=false;
         Euristica=new Heuristic();
-        TT=new TransTable(M,N);
+        TT=new TranspositionTable(M,N);
         bucketKey = 0;
         NFC = new HashMapNFC(M,N);
         Final=false;
