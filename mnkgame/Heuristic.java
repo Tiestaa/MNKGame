@@ -30,25 +30,29 @@ public class Heuristic {
         int cellCount=1;
         int totalValuation=0;
         int sum = 0;
+        int combo=0;
 
         //Horizontal check
         int k=1;
         while(j-k >= 0 && k<B.K && B.B[i][j-k] != opponentstate){     // backward check
-            if(B.B[i][j-k] == cell.state)totalValuation ++;
+            //if(B.B[i][j-k] == cell.state) totalValuation +=2;
             cellCount++;k++;
         }
         
-        if(j-k >= 0 && B.B[i][j-k] == opponentstate) totalValuation --;
+        //if(j-k >= 0 && B.B[i][j-k] == opponentstate) totalValuation --;
         
         k=1;
         while(j+k <  B.N && k<B.K+1 && B.B[i][j+k] != opponentstate){        // forward check
-            if(B.B[i][j+k] == cell.state) totalValuation ++;
+            //if(B.B[i][j+k] == cell.state)  totalValuation +=2;
             cellCount++;k++;
         }
         
-        if(j+k <  B.N && B.B[i][j+k] == opponentstate) totalValuation --;
+        //if(j+k <  B.N && B.B[i][j+k] == opponentstate) totalValuation --;
         
-        if (cellCount >= B.K) totalValuation += 2;
+        if (cellCount >= B.K) {
+            totalValuation += 1;
+            combo++;
+        }
         else totalValuation = 0;
         sum = totalValuation + sum;
 
@@ -56,21 +60,24 @@ public class Heuristic {
         k=1;
         cellCount=1;
         while(i-k >= 0 && k<B.K+1 && B.B[i-k][j] != opponentstate){     // backward check
-            if(B.B[i-k][j] == cell.state) totalValuation ++;
+            //if(B.B[i-k][j] == cell.state)  totalValuation +=2;
             cellCount++;k++;
         }
         
-        if(i-k >= 0 && B.B[i-k][j] == opponentstate) totalValuation --;
+        //if(i-k >= 0 && B.B[i-k][j] == opponentstate) totalValuation --;
         
         k=1;
         while(i+k <  B.M && k<B.K+1 && B.B[i+k][j] != opponentstate){     // forward check 
-            if(B.B[i+k][j] == cell.state) totalValuation ++;
+            //if(B.B[i+k][j] == cell.state) totalValuation +=2;
             cellCount++;k++;
         }
         
-        if(i+k <  B.M && B.B[i+k][j] == opponentstate) totalValuation --;
+        //if(i+k <  B.M && B.B[i+k][j] == opponentstate) totalValuation --;
 
-        if (cellCount >= B.K) totalValuation += 2;
+        if (cellCount >= B.K) {
+            combo++;
+            totalValuation += 1;
+        }
         else totalValuation = 0;
         sum = totalValuation + sum;
 
@@ -78,20 +85,23 @@ public class Heuristic {
         k=1;
         cellCount=1;
         while(i-k >= 0 && j-k >= 0 && k<B.K+1 && B.B[i-k][j-k]  != opponentstate){     // backward check
-            if(B.B[i-k][j-k] == cell.state) totalValuation ++;
+            //if(B.B[i-k][j-k] == cell.state)  totalValuation +=2;
             cellCount++;k++;
         }
-        if(i-k >= 0 && j-k >= 0 && B.B[i-k][j-k] == opponentstate) totalValuation --;
+        //if(i-k >= 0 && j-k >= 0 && B.B[i-k][j-k] == opponentstate) totalValuation --;
         
         k=1;
         while(i+k <  B.M && k<B.K+1 && j+k <  B.N && B.B[i+k][j+k] != opponentstate){   // forward check
-            if(B.B[i+k][j+k] == cell.state) totalValuation ++;
+            //if(B.B[i+k][j+k] == cell.state) totalValuation +=2;
             cellCount++;k++;
         }
         
-        if(i+k <  B.M && j+k <  B.N && B.B[i+k][j+k] == opponentstate) totalValuation --;
+        //if(i+k <  B.M && j+k <  B.N && B.B[i+k][j+k] == opponentstate) totalValuation --;
         
-        if (cellCount >= B.K) totalValuation += 2;
+        if (cellCount >= B.K) {
+            combo++;
+            totalValuation += 1;
+        }
         else totalValuation = 0;
         sum = totalValuation + sum;
 
@@ -99,23 +109,26 @@ public class Heuristic {
         k=1;
         cellCount=1;
         while(i-k >= 0 && j+k < B.N && k<B.K+1 && B.B[i-k][j+k] != opponentstate){     // backward check
-            if(B.B[i-k][j+k] == cell.state) totalValuation ++;
+            //if(B.B[i-k][j+k] == cell.state) totalValuation +=2;
             cellCount++;k++;
         }
         
-        if(i-k >= 0 && j+k < B.N &&  B.B[i-k][j+k] == opponentstate) totalValuation --;
+        //if(i-k >= 0 && j+k < B.N &&  B.B[i-k][j+k] == opponentstate) totalValuation --;
         
         k=1;
         while(i+k <  B.M && j-k >= 0 && k<B.K+1 && B.B[i+k][j-k] != opponentstate){   // forward check
-            if(B.B[i+k][j-k] == cell.state) totalValuation ++;
+            //if(B.B[i+k][j-k] == cell.state)  totalValuation +=2;
             cellCount++;k++;
         }
 
-        if(i+k <  B.M && j-k >= 0 &&  B.B[i+k][j-k] == opponentstate) totalValuation --;
+        //if(i+k <  B.M && j-k >= 0 &&  B.B[i+k][j-k] == opponentstate) totalValuation --;
     
-        if (cellCount >= B.K) totalValuation += 2;
+        if (cellCount >= B.K) {
+            combo++;
+            totalValuation += 1;
+        }
         else totalValuation = 0;
-        sum = totalValuation + sum;
+        sum = (totalValuation*combo) + sum;
 
         return sum;
     }
@@ -253,14 +266,14 @@ public class Heuristic {
                     else return 1200;
                 }
                 else{
-                    if (currentPlayerNode)return 40;
-                    else return 750;
+                    if (currentPlayerNode)return 50;
+                    else return 1000;
                 }
             }
             else if (isHorOpen(start, arrive, B)==1){
                 if (jump){
-                    if (currentPlayerNode)return 40;
-                    else return 750;
+                    if (currentPlayerNode)return 50;
+                    else return 1000;
                 }
             }
         }
@@ -350,14 +363,14 @@ public class Heuristic {
                     else return 1200;
                 }
                 else{
-                    if (currentPlayerNode)return 40;
-                    else return 750;
+                    if (currentPlayerNode)return 50;
+                    else return 1000;
                 }
             }
             else if (isVerOpen(start, arrive, B)==1){
                 if (jump){
-                    if (currentPlayerNode)return 40;
-                    else return 750;
+                    if (currentPlayerNode)return 50;
+                    else return 1000;
                 }
             }
         }
@@ -444,14 +457,14 @@ public class Heuristic {
                     else return 1200;
                 }
                 else{
-                    if (currentPlayerNode)return 40;
-                    else return 750;
+                    if (currentPlayerNode)return 50;
+                    else return 1000;
                 }
             }
             else if (isDiagOpen(start, arrive, B)==1){
                 if (jump){
-                    if (currentPlayerNode)return 40;
-                    else return 750;
+                    if (currentPlayerNode)return 50;
+                    else return 1000;
                 }
             }
         }
@@ -540,14 +553,14 @@ public class Heuristic {
                     else return 1200;
                 }
                 else {
-                    if (currentPlayerNode)return 40;
-                    else return 750;
+                    if (currentPlayerNode)return 50;
+                    else return 1000;
                 }
             }
             else if (isAntiDiagOpen(start, arrive, B)==1){
                 if (jump){
-                    if (currentPlayerNode)return 40;
-                    else return 750;
+                    if (currentPlayerNode)return 50;
+                    else return 1000;
                 }
             }
         }
@@ -558,8 +571,8 @@ public class Heuristic {
         int valuation=0;
         int CurrPlayer=0;
         int OppPlayer=0;
-        int MaxPlayerValue=0;
-        int MinPlayerValue=0;
+        int CurrPlayerCheck=0;
+        int OppPlayerCheck=0;
 
         if (B.gameState()==MNKGameState.WINP1) {
             return 10000000;
@@ -599,15 +612,16 @@ public class Heuristic {
             }
 
             valuation= check(c,B);
-                if (c.state == MNKCellState.P1) MaxPlayerValue = MaxPlayerValue +  valuation;
-                else MinPlayerValue = MinPlayerValue - valuation;
+            if (currentPlayerCell) CurrPlayerCheck = CurrPlayerCheck +  valuation;
+            else OppPlayerCheck = OppPlayerCheck - (valuation*2);
         }
 
-        CurrPlayer = CurrPlayer * 150;
-        OppPlayer = OppPlayer * 150; 
+        CurrPlayer = CurrPlayer * 50;
+        OppPlayer = OppPlayer * 50;
+
 
         hor.clear(); ver.clear(); diag.clear(); antidiag.clear();
         
-        return (MaxPlayerValue+MinPlayerValue + (CurrPlayer-OppPlayer));
+        return (CurrPlayerCheck-OppPlayerCheck) + (CurrPlayer-OppPlayer);
     }
 }

@@ -41,10 +41,10 @@ public class NisshokuPlayer implements MNKPlayer{
     }
 
     private void estimateTime(){
-        if(TIMEOUT * (TimeLimit / 100.0) - (System.currentTimeMillis() - TimeStart) / 1000.0 <= 0.4 ){
+        if(TIMEOUT - (System.currentTimeMillis() - TimeStart) / 1000.0  <= 0.04 ){
             TimeLimit = TimeLimit - 0.2;
         }
-        else if(TIMEOUT * (TimeLimit / 100.0) - (System.currentTimeMillis() - TimeStart) / 1000.0 >= 0.8 && TimeLimit <= 100. - 0.4 ){
+        else if( TIMEOUT - (System.currentTimeMillis() - TimeStart) / 1000.0 >= 0.06 && TimeLimit <= 100. - 0.4){
             TimeLimit = TimeLimit + 0.2;
         }
     }
@@ -71,7 +71,7 @@ public class NisshokuPlayer implements MNKPlayer{
                 }
 
                 B.markCell(d.i, d.j);
-                TT.updateKeys(B,d);         
+                TT.updateKeys(B,d);
                 NFC.fillNFCplus(d, B);
 
                 if (!TimeFinish) {
@@ -83,7 +83,7 @@ public class NisshokuPlayer implements MNKPlayer{
                         bestvalue = bestMove(bestvalue, value, false, d);
                     }
                 }
-                
+
                 B.unmarkCell();
                 TT.updateKeys(B,d);
                 NFC.deleteNFCplus(d, B);
@@ -95,14 +95,16 @@ public class NisshokuPlayer implements MNKPlayer{
                     NewBestCell = BestIterativeCell;
                     return;
                 }
+                //System.out.println("cella : "+ d.i +"-"+d.j+"\t\tvalue: "+ value +"\t\tbestvalue: "+ bestvalue+"\t\taltezza: "+ DepthCount);
             }
-            
+
             boolean Update=true;  
             if ((First && bestvalue == -10000000)|| (!First && bestvalue == 10000000)){
                 if (DepthCount==1) return;
                 else Update=false;
             } 
-            if ((!TimeFinish || DepthCount == 1) && Update){      
+            if ((!TimeFinish || DepthCount == 1) && Update){
+                //System.out.println("Cambio la cella "+ NewBestCell.i+"-"+NewBestCell.j+" con la cella "+ BestIterativeCell.i+"-"+BestIterativeCell.j);
                 NewBestCell = BestIterativeCell;   //se non finisce di ispezionare tutta l'altezza riporta la bestcell trovata prima
             }
         }
@@ -167,7 +169,7 @@ public class NisshokuPlayer implements MNKPlayer{
 
                     if (beta <= alpha)
                         break;
-        
+
                     if (TimeFinish) break;
                 }
             } else {
@@ -187,7 +189,7 @@ public class NisshokuPlayer implements MNKPlayer{
 
                     if (beta <= alpha)
                         break;
-        
+
                     if (TimeFinish) break;
                 }
             }
