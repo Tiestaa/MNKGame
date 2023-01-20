@@ -56,7 +56,7 @@ public class NisshokuPlayer implements MNKPlayer{
         int value = 0;
 
         for (DepthCount = 1; DepthCount <= maxdepth; DepthCount++) {
-            System.out.println("tempo ad altezza " + DepthCount + ": " + (System.currentTimeMillis() - TimeStart) / 1000.0);
+            //System.out.println("tempo ad altezza " + DepthCount + ": " + (System.currentTimeMillis() - TimeStart) / 1000.0);
             BestIterativeCell = null;
             if ((System.currentTimeMillis() - TimeStart) / 1000.0 > TIMEOUT * (TimeLimit / 100.0)) {
                 TimeFinish=true;
@@ -289,7 +289,7 @@ public class NisshokuPlayer implements MNKPlayer{
         TT.updateKeys(B,NewBestCell);
         NFC.fillNFCplus(NewBestCell,B);
         estimateTime();
-        System.out.println("end " + (System.currentTimeMillis() - TimeStart) / 1000.0 +  "  TimeLimit: " + TIMEOUT * TimeLimit / 100. + "\n");
+        //System.out.println("end " + (System.currentTimeMillis() - TimeStart) / 1000.0 +  "  TimeLimit: " + TIMEOUT * TimeLimit / 100. + "\n");
         return NewBestCell;
     }
 
