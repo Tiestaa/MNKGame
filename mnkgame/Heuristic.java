@@ -1,3 +1,6 @@
+/*
+ * created by Francesco Testa, Pietro Sami
+ */
 package mnkgame;
 
 import java.util.ArrayList;
@@ -46,7 +49,7 @@ public class Heuristic {
         if(j+k <  B.N && B.B[i][j+k] == opponentstate) totalValuation --;
         
         if (cellCount >= B.K) totalValuation += 2;
-        else totalValuation = totalValuation<0? totalValuation : 0;
+        else totalValuation = 0;
         sum = totalValuation + sum;
 
         // Vertical check
@@ -68,7 +71,7 @@ public class Heuristic {
         if(i+k <  B.M && B.B[i+k][j] == opponentstate) totalValuation --;
 
         if (cellCount >= B.K) totalValuation += 2;
-        else totalValuation = totalValuation<0? totalValuation : 0;
+        else totalValuation = 0;
         sum = totalValuation + sum;
 
         //diagonal check
@@ -89,7 +92,7 @@ public class Heuristic {
         if(i+k <  B.M && j+k <  B.N && B.B[i+k][j+k] == opponentstate) totalValuation --;
         
         if (cellCount >= B.K) totalValuation += 2;
-        else totalValuation = totalValuation<0 ? totalValuation : 0;
+        else totalValuation = 0;
         sum = totalValuation + sum;
 
         //antidiagonale check
@@ -111,7 +114,7 @@ public class Heuristic {
         if(i+k <  B.M && j-k >= 0 &&  B.B[i+k][j-k] == opponentstate) totalValuation --;
     
         if (cellCount >= B.K) totalValuation += 2;
-        else totalValuation = totalValuation<0? totalValuation : 0;
+        else totalValuation = 0;
         sum = totalValuation + sum;
 
         return sum;
@@ -250,14 +253,14 @@ public class Heuristic {
                     else return 1200;
                 }
                 else{
-                    if (currentPlayerNode)return 60;
-                    else return 1000;
+                    if (currentPlayerNode)return 40;
+                    else return 750;
                 }
             }
             else if (isHorOpen(start, arrive, B)==1){
                 if (jump){
-                    if (currentPlayerNode)return 60;
-                    else return 1000;
+                    if (currentPlayerNode)return 40;
+                    else return 750;
                 }
             }
         }
@@ -347,14 +350,14 @@ public class Heuristic {
                     else return 1200;
                 }
                 else{
-                    if (currentPlayerNode)return 60;
-                    else return 1000;
+                    if (currentPlayerNode)return 40;
+                    else return 750;
                 }
             }
             else if (isVerOpen(start, arrive, B)==1){
                 if (jump){
-                    if (currentPlayerNode)return 60;
-                    else return 1000;
+                    if (currentPlayerNode)return 40;
+                    else return 750;
                 }
             }
         }
@@ -441,14 +444,14 @@ public class Heuristic {
                     else return 1200;
                 }
                 else{
-                    if (currentPlayerNode)return 60;
-                    else return 1000;
+                    if (currentPlayerNode)return 40;
+                    else return 750;
                 }
             }
             else if (isDiagOpen(start, arrive, B)==1){
                 if (jump){
-                    if (currentPlayerNode)return 60;
-                    else return 1000;
+                    if (currentPlayerNode)return 40;
+                    else return 750;
                 }
             }
         }
@@ -537,14 +540,14 @@ public class Heuristic {
                     else return 1200;
                 }
                 else {
-                    if (currentPlayerNode)return 60;
-                    else return 1000;
+                    if (currentPlayerNode)return 40;
+                    else return 750;
                 }
             }
             else if (isAntiDiagOpen(start, arrive, B)==1){
                 if (jump){
-                    if (currentPlayerNode)return 60;
-                    else return 1000;
+                    if (currentPlayerNode)return 40;
+                    else return 750;
                 }
             }
         }

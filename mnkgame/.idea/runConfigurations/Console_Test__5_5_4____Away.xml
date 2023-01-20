@@ -2,7 +2,7 @@
   <configuration default="false" name="Console Test (5,5,4) - Away" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="mnkgame.MNKPlayerTester" />
     <module name="mnkgame" />
-    <option name="PROGRAM_PARAMETERS" value="5 5 4 mnkgame.CompetitivePlayer mnkgame.ATTPlayerDEFFNFC -r 25" />
+    <option name="PROGRAM_PARAMETERS" value="5 5 4mnkgame.claudio.Claudio mnkgame.NisshokuPlayer -r 25" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

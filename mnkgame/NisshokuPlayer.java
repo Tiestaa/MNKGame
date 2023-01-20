@@ -1,3 +1,6 @@
+/*
+ * created by Francesco Testa, Pietro Sami
+ */
 package mnkgame;
 
 import java.util.*;
@@ -101,7 +104,6 @@ public class NisshokuPlayer implements MNKPlayer{
             } 
             if ((!TimeFinish || DepthCount == 1) && Update){      
                 NewBestCell = BestIterativeCell;   //se non finisce di ispezionare tutta l'altezza riporta la bestcell trovata prima
-
             }
         }
     }

@@ -1,3 +1,6 @@
+/*
+ * created by Francesco Testa, Pietro Sami
+ */
 package mnkgame;
 
 import java.util.Map;
