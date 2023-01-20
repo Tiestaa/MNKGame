@@ -107,9 +107,9 @@ public class TranspositionTable {
     
         DataHash NewData;
         if(value <= alpha)
-            NewData = new DataHash(depth, value, Flag.LOWERBOUND);
-        else if(value >= beta)
             NewData = new DataHash(depth, value, Flag.UPPERBOUND);
+        else if(value >= beta)
+            NewData = new DataHash(depth, value, Flag.LOWERBOUND);
         else
             NewData = new DataHash(depth, value, Flag.EXACT);
 
