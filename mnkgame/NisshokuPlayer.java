@@ -31,7 +31,7 @@ public class NisshokuPlayer implements MNKPlayer{
         yourWin = first ? MNKGameState.WINP2 : MNKGameState.WINP1;
         First = first;
         TIMEOUT = timeout_in_secs;
-        TimeLimit = 100. - 0.4;
+        TimeLimit = 100. - 1;
         TimeFinish=false;
         Euristica=new Heuristic();
         TT=new TranspositionTable(M,N);
@@ -41,10 +41,10 @@ public class NisshokuPlayer implements MNKPlayer{
     }
 
     private void estimateTime(){
-        if(TIMEOUT * (TimeLimit / 100.0) - (System.currentTimeMillis() - TimeStart) / 1000.0 <= 0.4 ){
+        if(TIMEOUT - (System.currentTimeMillis() - TimeStart) / 1000.0  <= 0.04 ){
             TimeLimit = TimeLimit - 0.2;
         }
-        else if(TIMEOUT * (TimeLimit / 100.0) - (System.currentTimeMillis() - TimeStart) / 1000.0 >= 0.8 && TimeLimit <= 100. - 0.4 ){
+        else if( TIMEOUT - (System.currentTimeMillis() - TimeStart) / 1000.0 >= 0.06 && TimeLimit <= 100. - 0.4){
             TimeLimit = TimeLimit + 0.2;
         }
     }
@@ -56,6 +56,7 @@ public class NisshokuPlayer implements MNKPlayer{
         int value = 0;
 
         for (DepthCount = 1; DepthCount <= maxdepth; DepthCount++) {
+            System.out.println("tempo ad altezza " + DepthCount + ": " + (System.currentTimeMillis() - TimeStart) / 1000.0);
             BestIterativeCell = null;
             if ((System.currentTimeMillis() - TimeStart) / 1000.0 > TIMEOUT * (TimeLimit / 100.0)) {
                 TimeFinish=true;
@@ -288,6 +289,7 @@ public class NisshokuPlayer implements MNKPlayer{
         TT.updateKeys(B,NewBestCell);
         NFC.fillNFCplus(NewBestCell,B);
         estimateTime();
+        System.out.println("end " + (System.currentTimeMillis() - TimeStart) / 1000.0 +  "  TimeLimit: " + TIMEOUT * TimeLimit / 100. + "\n");
         return NewBestCell;
     }
 
