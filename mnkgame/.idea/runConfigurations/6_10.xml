@@ -6,10 +6,8 @@
     <runConfiguration name="Console Test (5,5,5) - Away" type="Application" />
     <runConfiguration name="Console Test (6,4,4) - Home" type="Application" />
     <runConfiguration name="Console Test (6,4,4) - Away" type="Application" />
-    <runConfiguration name="Console Test (6,5,4) - Home" type="Application" />
     <runConfiguration name="Console Test (6,5,4) - Away" type="Application" />
     <runConfiguration name="Console Test (6,6,4) - Away" type="Application" />
-    <runConfiguration name="Console Test (6,6,4) - Home" type="Application" />
     <method v="2" />
   </configuration>
 </component>
