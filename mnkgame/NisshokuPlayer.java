@@ -19,7 +19,6 @@ public class NisshokuPlayer implements MNKPlayer{
     private int DepthCount;
     private boolean Final;
     private TranspositionTable TT;
-    private long bucketKey;
     private Heuristic Euristica;
     private HashMapNFC NFC;
 
@@ -35,7 +34,6 @@ public class NisshokuPlayer implements MNKPlayer{
         TimeFinish=false;
         Euristica=new Heuristic();
         TT=new TranspositionTable(M,N);
-        bucketKey = 0;
         NFC = new HashMapNFC(M,N);
         Final=false;
     }
@@ -56,7 +54,6 @@ public class NisshokuPlayer implements MNKPlayer{
         int value = 0;
 
         for (DepthCount = 1; DepthCount <= maxdepth; DepthCount++) {
-            //System.out.println("tempo ad altezza " + DepthCount + ": " + (System.currentTimeMillis() - TimeStart) / 1000.0);
             BestIterativeCell = null;
             if ((System.currentTimeMillis() - TimeStart) / 1000.0 > TIMEOUT * (TimeLimit / 100.0)) {
                 TimeFinish=true;
@@ -77,10 +74,10 @@ public class NisshokuPlayer implements MNKPlayer{
 
                 if (!TimeFinish) {
                     if (MaxplayerA) {
-                        value = Math.max(Integer.MIN_VALUE, AlphaBeta(DepthCount, alpha, beta, false,d));
+                        value = Math.max(Integer.MIN_VALUE, AlphaBeta(DepthCount, alpha, beta, false));
                         bestvalue = bestMove(bestvalue, value, true, d);
                     } else {
-                        value = Math.min(Integer.MAX_VALUE, AlphaBeta(DepthCount, alpha, beta, true,d));
+                        value = Math.min(Integer.MAX_VALUE, AlphaBeta(DepthCount, alpha, beta, true));
                         bestvalue = bestMove(bestvalue, value, false, d);
                     }
                 }
@@ -96,9 +93,7 @@ public class NisshokuPlayer implements MNKPlayer{
                     NewBestCell = BestIterativeCell;
                     return;
                 }
-                //System.out.println("cella : "+ d.i +"-"+d.j+"\t\tvalue: "+ value +"\t\tbestvalue: "+ bestvalue+"\t\taltezza: "+ DepthCount);
                 if(DepthCount == 1){
-                    //System.out.println("Cambio la cella "+ NewBestCell.i+"-"+NewBestCell.j+" con la cella "+ BestIterativeCell.i+"-"+BestIterativeCell.j);
                     NewBestCell = BestIterativeCell;
 
                 }
@@ -110,8 +105,6 @@ public class NisshokuPlayer implements MNKPlayer{
                 else Update=false;
             } 
             if ((!TimeFinish || DepthCount == 1) && Update){
-                //System.out.println("\tCambio valutazione da" + BestIterativeCell.i + "-" + BestIterativeCell.j + " a " + NewBestCell.i +"-"+ NewBestCell.j);
-                //System.out.println("Cambio la cella "+ NewBestCell.i+"-"+NewBestCell.j+" con la cella "+ BestIterativeCell.i+"-"+BestIterativeCell.j);
                 NewBestCell = BestIterativeCell;   //se non finisce di ispezionare tutta l'altezza riporta la bestcell trovata prima
                 
             }
@@ -119,7 +112,7 @@ public class NisshokuPlayer implements MNKPlayer{
     }
 
 
-    private int AlphaBeta(int depth,int alpha, int beta,boolean MaxPlayerA,MNKCell currentCell) {
+    private int AlphaBeta(int depth,int alpha, int beta,boolean MaxPlayerA) {
 
         int value = MaxPlayerA ? Integer.MIN_VALUE : Integer.MAX_VALUE;
 
@@ -168,7 +161,7 @@ public class NisshokuPlayer implements MNKPlayer{
                     TT.updateKeys(B,child);
                     NFC.fillNFCplus(child, B);
 
-                    value = Math.max(value, AlphaBeta(depth - 1, alpha, beta, false, child));
+                    value = Math.max(value, AlphaBeta(depth - 1, alpha, beta, false));
                     alpha = Math.max(value, alpha);
 
                     B.unmarkCell();
@@ -188,7 +181,7 @@ public class NisshokuPlayer implements MNKPlayer{
                     TT.updateKeys(B,child);
                     NFC.fillNFCplus(child, B);
 
-                    value = Math.min(value, AlphaBeta(depth - 1, alpha, beta, true,child));
+                    value = Math.min(value, AlphaBeta(depth - 1, alpha, beta, true));
                     beta = Math.min(value, beta);
 
                     B.unmarkCell();

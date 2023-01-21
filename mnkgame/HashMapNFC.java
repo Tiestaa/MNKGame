@@ -3,9 +3,6 @@
  */
 package mnkgame;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 
 public class HashMapNFC{
@@ -23,10 +20,6 @@ public class HashMapNFC{
         String jstring = Integer.toString(d.j);
         String K = istring + jstring;
         return Integer.parseInt(K);
-    }
-
-    public boolean contains(MNKCell d){
-        return NFC.containsValue(d);
     }
 
     private void add(MNKCell d, int count){

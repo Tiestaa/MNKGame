@@ -1,6 +1,8 @@
+/*
+ * created by Francesco Testa, Pietro Sami
+ */
 package mnkgame;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Heuristic {
@@ -167,7 +169,6 @@ public class Heuristic {
         int k = 1;
         boolean jump = false;     //mi tiene traccia di un salto di una cella vuota
         boolean flag = true;      //in caso di salto già avvenuto, il while si ferma
-        boolean currentPlayerNode = (B.currentPlayer()==0 && c.state==MNKCellState.P1)||(B.currentPlayer() == 1 && c.state==MNKCellState.P2);
 
         //prendo le celle di start e arrivo per verificare successivamente che celle ci sono alle estremità,
         //partono entrambe dalla stessa cella
@@ -219,23 +220,23 @@ public class Heuristic {
         if (count==B.K-1){
             if (isHorOpen(start,arrive,B)==2) {
                 if (!jump) {
-                    if (currentPlayerNode) return 250;
+                    if (currentPlayerCell) return 250;
                     else return 5020;
                 } else {
                     //k-1 halfopen,allineati con estremi liberi ma con un salto
-                    if (currentPlayerNode) return 80;
+                    if (currentPlayerCell) return 80;
                     else return 1500;
                 }
             }
             else if (isHorOpen(start,arrive,B)==1) {
                 //k-1 halfopen,allineati con un estremo libero senza/con un salto
-                if (currentPlayerNode) return 80;
+                if (currentPlayerCell) return 80;
                 else return 1500;
             }
             else {
                 if (jump) {
                     //k-1 allineati con estremi non liberi ma con un salto
-                    if (currentPlayerNode) return 80;
+                    if (currentPlayerCell) return 80;
                     else return 1500;
                 }
             }
@@ -246,17 +247,17 @@ public class Heuristic {
             if (isHorOpen(start, arrive,B) == 2) {
                 //k-2 open
                 if (!jump) {
-                    if (currentPlayerNode) return 150;
+                    if (currentPlayerCell) return 150;
                     else return 1200;
                 }
                 else{
-                    if (currentPlayerNode)return 60;
+                    if (currentPlayerCell)return 60;
                     else return 1000;
                 }
             }
             else if (isHorOpen(start, arrive, B)==1){
                 if(jump){
-                    if (currentPlayerNode)return 60;
+                    if (currentPlayerCell)return 60;
                     else return 1000;
                 }
             }
@@ -273,7 +274,6 @@ public class Heuristic {
         boolean flag=true;
         MNKCell start=c;
         MNKCell arrive=c;
-        boolean currentPlayerNode= (B.currentPlayer()==0 && c.state==MNKCellState.P1)||(B.currentPlayer() == 1 && c.state==MNKCellState.P2);
 
         //backward
         while ((((flag && i-k >=0) && k< B.K) && B.B[i-k][j]!=opponentstate)) {
@@ -322,20 +322,20 @@ public class Heuristic {
         if (count==B.K-1){
             if (isVerOpen(start,arrive,B)==2) {
                 if (!jump) {
-                    if (currentPlayerNode) return 250;
+                    if (currentPlayerCell) return 250;
                     else return 5020;
                 }
                 else {
-                    if (currentPlayerNode)return 80;
+                    if (currentPlayerCell)return 80;
                     else return 1500;
                 }
             }
             else if (isVerOpen(start,arrive,B)==1)
-                if (currentPlayerNode)return 80;
+                if (currentPlayerCell)return 80;
                 else return 1500;
             else {
                 if (jump) {
-                    if (currentPlayerNode)return 80;
+                    if (currentPlayerCell)return 80;
                     else return 1500;
                 }
             }
@@ -343,17 +343,17 @@ public class Heuristic {
         else if (count == B.K - 2) {
             if (isVerOpen(start, arrive,B) == 2) {
                 if (!jump) {
-                    if (currentPlayerNode) return 150;
+                    if (currentPlayerCell) return 150;
                     else return 1200;
                 }
                 else{
-                    if (currentPlayerNode)return 60;
+                    if (currentPlayerCell)return 60;
                     else return 1000;
                 }
             }
             else if (isVerOpen(start, arrive, B)==1){
                 if(jump){
-                    if (currentPlayerNode)return 60;
+                    if (currentPlayerCell)return 60;
                     else return 1000;
                 }
             }
@@ -370,7 +370,6 @@ public class Heuristic {
         boolean flag=true;
         MNKCell start=c;
         MNKCell arrive=c;
-        boolean currentPlayerNode= (B.currentPlayer()==0 && c.state==MNKCellState.P1)||(B.currentPlayer() == 1 && c.state==MNKCellState.P2);
 
         //backward
         while (flag && i-k>=0 && j-k>=0 && k<B.K && B.B[i-k][j-k]!=opponentstate) {
@@ -415,21 +414,21 @@ public class Heuristic {
         if (count==B.K-1){
             if (isDiagOpen(start,arrive,B)==2) {
                 if (!jump) {
-                    if (currentPlayerNode)return 250;
+                    if (currentPlayerCell)return 250;
                     else return 5020;
                 }
                 else {
-                    if (currentPlayerNode)return 80;
+                    if (currentPlayerCell)return 80;
                     else return 1500;
                 }
             }
             else if (isDiagOpen(start,arrive,B)==1) {
-                if (currentPlayerNode)return 80;
+                if (currentPlayerCell)return 80;
                 else return 1500;
             }
             else {
                 if (jump) {
-                    if (currentPlayerNode)return 80;
+                    if (currentPlayerCell)return 80;
                     else return 1500;
                 }
             }
@@ -437,17 +436,17 @@ public class Heuristic {
         else if (count == B.K - 2) {
             if (isDiagOpen(start, arrive,B) == 2) {
                 if (!jump) {
-                    if (currentPlayerNode)return 150;
+                    if (currentPlayerCell)return 150;
                     else return 1200;
                 }
                 else{
-                    if (currentPlayerNode)return 60;
+                    if (currentPlayerCell)return 60;
                     else return 1000;
                 }
             }
             else if (isDiagOpen(start, arrive, B)==1){
                 if(jump){
-                    if (currentPlayerNode)return 60;
+                    if (currentPlayerCell)return 60;
                     else return 1000;
                 }
             }
@@ -464,7 +463,7 @@ public class Heuristic {
         boolean flag=true;
         MNKCell start=c;
         MNKCell arrive=c;
-        boolean currentPlayerNode= (B.currentPlayer()==0 && c.state==MNKCellState.P1)||(B.currentPlayer() == 1 && c.state==MNKCellState.P2);
+
 
         //backward
         while (flag && i-k >= 0 && j+k < B.N  && B.B[i-k][j+k]!=opponentstate) {
@@ -511,21 +510,21 @@ public class Heuristic {
         if (count==B.K-1){
             if (isAntiDiagOpen(start,arrive,B)==2) {
                 if (!jump) {
-                    if (currentPlayerNode)return 250;
+                    if (currentPlayerCell)return 250;
                     else return 5020;
                 }
                 else {
-                    if (currentPlayerNode)return 80;
+                    if (currentPlayerCell)return 80;
                     else return 1500;
                 }
             }
             else if (isAntiDiagOpen(start,arrive,B)==1) {
-                if (currentPlayerNode)return 100;
+                if (currentPlayerCell)return 100;
                 else return 1500;
             }
             else {
                 if (jump) {
-                    if (currentPlayerNode)return 80;
+                    if (currentPlayerCell)return 80;
                     else return 1500;
                 }
             }
@@ -533,17 +532,17 @@ public class Heuristic {
         else if (count == B.K - 2) {
             if (isAntiDiagOpen(start, arrive,B) == 2) {
                 if (!jump) {
-                    if (currentPlayerNode)return 150;
+                    if (currentPlayerCell)return 150;
                     else return 1200;
                 }
                 else {
-                    if (currentPlayerNode)return 60;
+                    if (currentPlayerCell)return 60;
                     else return 1000;
                 }
             }
             else if (isAntiDiagOpen(start, arrive, B)==1){
                 if(jump){
-                    if (currentPlayerNode)return 60;
+                    if (currentPlayerCell)return 60;
                     else return 1000;
                 }
                 
@@ -605,24 +604,6 @@ public class Heuristic {
         OppPlayer = OppPlayer * 150; 
 
         hor.clear(); ver.clear(); diag.clear(); antidiag.clear();
-
-        /* 
-        if (CurrPlayer==0 && OppPlayer==0){
-            for (MNKCell c : MARKED){
-                valuation= check(c,B);
-                if (c.state == MNKCellState.P1) MaxPlayerValue = MaxPlayerValue +  valuation;
-                else MinPlayerValue = MinPlayerValue - valuation;
-            }
-        }
-        
-
-
-
-        int toReturn = 0;
-        if (CurrPlayer!=0 && OppPlayer!=0) toReturn = (CurrPlayer-OppPlayer);
-        else toReturn = (MaxPlayerValue+MinPlayerValue);
-        return toReturn;
-        */
 
         return MaxPlayerValue + MinPlayerValue + (CurrPlayer-OppPlayer);
     }

@@ -13,11 +13,9 @@ public class DataHash {
         this.depth = depth;
         this.valuation = valuation;
     }
-
     public Flag getFlag() {
         return flag;
     }
-
     public int getDepth() {
         return depth;
     }

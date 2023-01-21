@@ -24,6 +24,4 @@ public class NFCell extends MNKCell{
     public void decreaseCount(){
         count--;
     }
-
-
 }

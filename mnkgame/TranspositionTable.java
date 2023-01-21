@@ -145,14 +145,8 @@ public class TranspositionTable {
         else if (M==N && findRightKey(rtZobby, rtspec_Zobby, rtbot_Zobby, rtbot_Spec_Zobby)) return tt.get(ZobriestKey);
         else return null;
     }
-
-
-
     public void clear (){
         tt.clear();
     }
 
-    public long getRightKey(){
-        return ZobriestKey;
-    }
 }
