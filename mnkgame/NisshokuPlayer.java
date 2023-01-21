@@ -44,7 +44,7 @@ public class NisshokuPlayer implements MNKPlayer{
         if(TIMEOUT - (System.currentTimeMillis() - TimeStart) / 1000.0  <= 0.04 ){
             TimeLimit = TimeLimit - 0.2;
         }
-        else if( TIMEOUT - (System.currentTimeMillis() - TimeStart) / 1000.0 >= 0.06 && TimeLimit <= 100. - 0.4){
+        else if(TIMEOUT - (System.currentTimeMillis() - TimeStart) / 1000.0 >= 0.06 && TimeLimit <= 100. - 0.4){
             TimeLimit = TimeLimit + 0.2;
         }
     }

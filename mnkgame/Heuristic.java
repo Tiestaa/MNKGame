@@ -255,8 +255,10 @@ public class Heuristic {
                 }
             }
             else if (isHorOpen(start, arrive, B)==1){
-                if (currentPlayerNode)return 60;
-                else return 1000;
+                if(jump){
+                    if (currentPlayerNode)return 60;
+                    else return 1000;
+                }
             }
         }
         return 0;
@@ -350,8 +352,10 @@ public class Heuristic {
                 }
             }
             else if (isVerOpen(start, arrive, B)==1){
-                if (currentPlayerNode)return 60;
-                else return 1000;
+                if(jump){
+                    if (currentPlayerNode)return 60;
+                    else return 1000;
+                }
             }
         }
         return 0;
@@ -442,8 +446,10 @@ public class Heuristic {
                 }
             }
             else if (isDiagOpen(start, arrive, B)==1){
-                if (currentPlayerNode)return 60;
-                else return 1000;
+                if(jump){
+                    if (currentPlayerNode)return 60;
+                    else return 1000;
+                }
             }
         }
         return 0;
@@ -536,8 +542,11 @@ public class Heuristic {
                 }
             }
             else if (isAntiDiagOpen(start, arrive, B)==1){
-                if (currentPlayerNode)return 60;
-                else return 1000;
+                if(jump){
+                    if (currentPlayerNode)return 60;
+                    else return 1000;
+                }
+                
             }
         }
         return 0;
