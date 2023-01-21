@@ -84,7 +84,7 @@ public class NisshokuPlayer implements MNKPlayer{
                         bestvalue = bestMove(bestvalue, value, false, d);
                     }
                 }
-
+                //System.out.println("cella : "+ d.i +"-"+d.j+"\t\tvalue: "+ value +"\t\tbestvalue: "+ bestvalue+"\t\taltezza: "+ DepthCount);
                 B.unmarkCell();
                 TT.updateKeys(B,d);
                 NFC.deleteNFCplus(d, B);
@@ -97,6 +97,11 @@ public class NisshokuPlayer implements MNKPlayer{
                     return;
                 }
                 //System.out.println("cella : "+ d.i +"-"+d.j+"\t\tvalue: "+ value +"\t\tbestvalue: "+ bestvalue+"\t\taltezza: "+ DepthCount);
+                if(DepthCount == 1){
+                    //System.out.println("Cambio la cella "+ NewBestCell.i+"-"+NewBestCell.j+" con la cella "+ BestIterativeCell.i+"-"+BestIterativeCell.j);
+                    NewBestCell = BestIterativeCell;
+
+                }
             }
 
             boolean Update=true;  
@@ -105,8 +110,10 @@ public class NisshokuPlayer implements MNKPlayer{
                 else Update=false;
             } 
             if ((!TimeFinish || DepthCount == 1) && Update){
+                //System.out.println("\tCambio valutazione da" + BestIterativeCell.i + "-" + BestIterativeCell.j + " a " + NewBestCell.i +"-"+ NewBestCell.j);
                 //System.out.println("Cambio la cella "+ NewBestCell.i+"-"+NewBestCell.j+" con la cella "+ BestIterativeCell.i+"-"+BestIterativeCell.j);
                 NewBestCell = BestIterativeCell;   //se non finisce di ispezionare tutta l'altezza riporta la bestcell trovata prima
+                
             }
         }
     }
@@ -143,7 +150,7 @@ public class NisshokuPlayer implements MNKPlayer{
                     return TTData.getValuation();
                 }
             }
-            
+        
         }
         
         
@@ -279,7 +286,7 @@ public class NisshokuPlayer implements MNKPlayer{
         }
         
         if(FC.length == 1) {
-            return FC[0];  // only one move left
+            return FC[0];  
         }
 
         boolean MaxPlayerA = B.currentPlayer() == 0;  // Am I the starting player ? (PlayerA)
@@ -291,7 +298,6 @@ public class NisshokuPlayer implements MNKPlayer{
         TT.updateKeys(B,NewBestCell);
         NFC.fillNFCplus(NewBestCell,B);
         estimateTime();
-        //System.out.println("end " + (System.currentTimeMillis() - TimeStart) / 1000.0 +  "  TimeLimit: " + TIMEOUT * TimeLimit / 100. + "\n");
         return NewBestCell;
     }
 

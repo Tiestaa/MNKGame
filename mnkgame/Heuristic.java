@@ -615,6 +615,6 @@ public class Heuristic {
         return toReturn;
         */
 
-        return MaxPlayerValue+MinPlayerValue + (CurrPlayer-OppPlayer);
+        return MaxPlayerValue + MinPlayerValue + (CurrPlayer-OppPlayer);
     }
 }
