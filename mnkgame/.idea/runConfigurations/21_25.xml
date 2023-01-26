@@ -5,7 +5,6 @@
     <runConfiguration name="Console Test (8,8,4) - Away " type="Application" />
     <runConfiguration name="Console Test (10,10,5) - Home" type="Application" />
     <runConfiguration name="Console Test (10,10,5) - Away" type="Application" />
-    <runConfiguration name="Console Test (8,8,4) - Home" type="Application" />
     <runConfiguration name="Console Test (50,50,10) - Home" type="Application" />
     <runConfiguration name="Console Test (50,50,10) - Away" type="Application" />
     <runConfiguration name="Console Test (70,70,10) - Home" type="Application" />

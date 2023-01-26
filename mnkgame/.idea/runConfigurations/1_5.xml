@@ -1,14 +1,13 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="1-5" type="Multirun" separateTabs="true" reuseTabsWithFailures="false" startOneByOne="true" markFailedProcess="false" hideSuccessProcess="false" delayTime="0.0">
     <runConfiguration name="Console Test (3,3,3) - Away" type="Application" />
-    <runConfiguration name="Console Test (4,3,3) - Home" type="Application" />
     <runConfiguration name="Console Test (4,3,3) - Away" type="Application" />
     <runConfiguration name="Console Test (4,4,3) - Away" type="Application" />
     <runConfiguration name="Console Test (4,4,4) - Away" type="Application" />
     <runConfiguration name="Console Test (5,4,4) - Home" type="Application" />
     <runConfiguration name="Console Test (5,4,4) - Away" type="Application" />
-    <runConfiguration name="Console Test (4,4,3) - Home" type="Application" />
     <runConfiguration name="Console Test (4,4,4) - Home" type="Application" />
+    <runConfiguration name="Console Test (3,3,3) - Home" type="Application" />
     <method v="2" />
   </configuration>
 </component>
