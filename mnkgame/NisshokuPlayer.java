@@ -39,17 +39,17 @@ public class NisshokuPlayer implements MNKPlayer{
     }
 
     private void estimateTime(){
-        if(TIMEOUT - (System.currentTimeMillis() - TimeStart) / 1000.0  <= 0.04 ){
+        if(TIMEOUT - (System.currentTimeMillis() - TimeStart) / 1000.0  <= 0.06 ){
             TimeLimit = TimeLimit - 0.2;
         }
-        else if(TIMEOUT - (System.currentTimeMillis() - TimeStart) / 1000.0 >= 0.06 && TimeLimit <= 100. - 0.4){
+        else if(TIMEOUT - (System.currentTimeMillis() - TimeStart) / 1000.0 >= 0.08 && TimeLimit <= 100. - 0.6){
             TimeLimit = TimeLimit + 0.2;
         }
     }
 
     private void IterativeDeepening(boolean MaxplayerA, int maxdepth) {
-        int alpha = Integer.MIN_VALUE;       //minvalue
-        int beta = Integer.MAX_VALUE;     //maxvalue
+        int alpha = Integer.MIN_VALUE;      
+        int beta = Integer.MAX_VALUE;     
         int bestvalue = MaxplayerA ? Integer.MIN_VALUE : Integer.MAX_VALUE;
         int value = 0;
 
@@ -81,7 +81,7 @@ public class NisshokuPlayer implements MNKPlayer{
                         bestvalue = bestMove(bestvalue, value, false, d);
                     }
                 }
-                //System.out.println("cella : "+ d.i +"-"+d.j+"\t\tvalue: "+ value +"\t\tbestvalue: "+ bestvalue+"\t\taltezza: "+ DepthCount);
+               
                 B.unmarkCell();
                 TT.updateKeys(B,d);
                 NFC.deleteNFCplus(d, B);
@@ -226,7 +226,7 @@ public class NisshokuPlayer implements MNKPlayer{
         if(MC.length > 0) {
             TT.clear();     
             MNKCell c = new MNKCell(MC[MC.length - 1].i, MC[MC.length - 1].j, First ? MNKCellState.P2 : MNKCellState.P1);
-            B.markCell(c.i,c.j); //mark the last move
+            B.markCell(c.i,c.j);
             TT.updateKeys(B,c);
             NFC.fillNFCplus(c,B);
         }
