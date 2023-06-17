@@ -49,7 +49,7 @@ public class MNKBoard {
    */
 	public final int K;
 
-	protected final MNKCellState[][]    B;
+	public final MNKCellState[][]    B;
 	protected final LinkedList<MNKCell> MC;  // Marked Cells
 	protected final HashSet<MNKCell>    FC;  // Free Cells
 
