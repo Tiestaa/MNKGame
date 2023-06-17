@@ -1,7 +1,7 @@
 ### Descrizione Progetto
 Il progetto consiste nel creare un algoritmo in java che, in modo intelligente, riesca a giocare ad un MNKgame, generalizzazione del celebre TicTacToe.
-NisshokuPlayer è la classe principale che contiene la funzione per la scelta (public MNKCell selectcell()). Nisshoku player si basa sull’algoritmo studiato a lezione dell “’Iterative deepening”, in aggiunta abbiamo implementato: una classe per la valutazione delle situazioni di gioco ([Heuristic](./NisshokuPlayer/Heuristic.java)), una classe per la scelta delle celle durante iterative deepening e alphabeta pruning ([HashMapNFC](./NisshokuPlayer/HashMapNFC.java)) ed infine una classe per gestire le configurazioni che abbiamo già valutato nel corso dell’algoritmo ([TranspositionTable](./NisshokuPlayer/TranspositionTable.java)).
-Per maggiori informazioni, [clicca qui](./Relazione/Relazione_MNKgame_Testa_Sami%20.pdf).
+NisshokuPlayer è la classe principale che contiene la funzione per la scelta (public MNKCell selectcell()). Nisshoku player si basa sull’algoritmo studiato a lezione dell “’Iterative deepening”, in aggiunta abbiamo implementato: una classe per la valutazione delle situazioni di gioco ([Heuristic](./NisshokuPlayer/Heuristic.java)), una classe per la scelta delle celle durante iterative deepening e alphabeta pruning ([HashMapNFC](./NisshokuPlayer/HashMapNFC.java)) ed infine una classe per gestire le configurazioni che abbiamo già valutato nel corso dell’algoritmo ([TranspositionTable](./NisshokuPlayer/TranspositionTable.java)).  
+Per maggiori informazioni, [clicca qui](./Relazione/Relazione_MNKgame_Testa_Sami%20.pdf).  
 Valutazione: 29/30
 
 ### Compilazione e Running
@@ -11,17 +11,17 @@ Valutazione: 29/30
 - Command-line compile.  In the root directory run:
 	```javac  mnkgame/*.java NisshokuPlayer/*.java```
 
-#### Running
+#### Running 
+you can run the project in 2 different ways:
+##### MNKGame application:
 
-##### MNKGame application:
+- Human vs Computer.  In the root directory run:
 
-- Human vs Computer.  In the mnkgame/ directory run:
-
-	``` java mnkgame.MNKGame 3 3 3 mnkgame.RandomPlayer ```
+	``` java mnkgame.MNKGame [M][N][K] mnkgame.RandomPlayer ```
 
 
-- Computer vs Computer. In the mnkgame/ directory run:
-	```java mnkgame.MNKGame 5 5 4 mnkgame.RandomPlayer mnkgame.QuasiRandomPlayer ```
+- Computer vs Computer. In the root directory run:
+	```java mnkgame.MNKGame [M][N][K] mnkgame.RandomPlayer mnkgame.QuasiRandomPlayer ```
 
 ##### MNKPlayerTester application:
 
